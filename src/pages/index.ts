@@ -10,3 +10,6 @@ export { default as EditProfile } from "./_main/EditProfile";
 export { default as Stories } from "./_main/Stories";
 export { default as Reels } from "./_main/Reels";
 export { default as SavedPosts } from "./_main/SavedPosts";
+
+export { default as LogIn } from "./_auth/LogIn";
+export { default as SignUp } from "./_auth/SignUp";
