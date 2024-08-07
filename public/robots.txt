@@ -1,0 +1,27 @@
+# During development or testing, you usually don’t want search engines to index your site
+
+User-agent: *     # rule applies to all web crawlers
+Disallow: /       # Disallow web crawler to access any page of your site
+
+
+# Optimizing for Production
+
+# Block all crawlers from accessing sensitive or private directories
+# User-agent: *
+# Disallow: /admin/
+# Disallow: /login/
+# Disallow: /private/
+
+# Allow all crawlers to access everything else
+# User-agent: *
+# Allow: /
+
+# Block a specific crawler (e.g., BadBot)
+# User-agent: BadBot
+# Disallow: /
+
+
+# Sitemap location
+# Sitemap: https://yourdomain.com/sitemap.xml
+
+# test robots.txt file with https://search.google.com/search-console/about
