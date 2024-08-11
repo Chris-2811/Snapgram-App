@@ -72,7 +72,7 @@
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: #000 !important;
+    -webkit-text-fill-color: #fff !important;
   }
 
   /* Remove increment and decrement buttons from number input fields in WebKit-based browsers */
@@ -122,4 +122,8 @@
   .invert-white {
     @apply brightness-0 invert transition;
   }
+
+  /*   .error-icon path path {
+    @apply fill-white;
+  } */
 }
