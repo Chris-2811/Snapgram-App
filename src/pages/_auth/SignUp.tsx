@@ -4,12 +4,8 @@ import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
+import { IErrors } from "@/types";
 import OAuth from "@/components/shared/_auth/OAuth";
-  email: string;
-  password: string;
-  name: string;
-}
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -18,15 +14,89 @@ function SignUp() {
     password: "",
     name: "",
   });
-  const [errors, setErrors] = useState<Errors>({
+  const [errors, setErrors] = useState<IErrors>({
     email: "",
     password: "",
     name: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>();
 
+  function validateForm() {
+    let isValid = true;
+    const newErrors: IErrors = { email: "", password: "", name: "" };
+
+    const { email, name, password } = formData;
+
+    if (!email) {
+      isValid = false;
+      newErrors.email = "Please enter your email address.";
+    } else if (
+      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(formData.email)
+    ) {
+      isValid = false;
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!name) {
+      isValid = false;
+      newErrors.name = "Plase enter your name.";
+    } else if (name.length < 3 || name.length > 20) {
+      isValid = false;
+      newErrors.name = "Name must be between 3 and 20 characters";
+    }
+
+    if (!password) {
+      isValid = false;
+      newErrors.password = "Please enter a password.";
+    } else if (password.length < 8 || password.length > 20) {
+      isValid = false;
+      newErrors.password = "Password must be between 8 and 20 characters";
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setformData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+
+    if (errors[e.target.id as keyof IErrors]) {
+      if (
+        (e.target.id === "name" && e.target.value.length < 3) ||
+        e.target.value.length > 20
+      ) {
+        setErrors({
+          ...errors,
+          [e.target.id]: "Name must be between 3 and 20 characters",
+        });
+        return;
+      }
+
+      setErrors({
+        ...errors,
+        [e.target.id]: "",
+      });
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    console.log("success");
+  }
+
   return (
-    <form className="w-full max-w-[400px] px-6 text-light-200 md:px-0">
+    <form
+      onSubmit={handleSubmit}
+      className="w-full max-w-[400px] px-6 text-light-200 md:px-0"
+    >
       <div className="mt-[4.25rem] text-center">
         <h1 className="heading-md text-light-100">Create a new account</h1>
         <p className="mt-3 text-light-300">
@@ -36,22 +106,38 @@ function SignUp() {
       <div className="form-control relative mt-8">
         <label htmlFor="name ">Name</label>
         <div className="relative">
-          <Input type="text" name="name" id="name" />
-          {errors.name && (
-            <small className="absolute right-4 top-1/2 -translate-y-[50%] text-red">
-              {errors.name}
-            </small>
-          )}
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            value={formData.name}
+            onChange={handleChange}
+            hasError={errors.name}
+          />
         </div>
+        {errors.name && (
+          <div className="mt-2 flex items-center gap-2">
+            <img src="/public/assets/icons/error.svg" alt="" />
+            <small className="text-red">{errors.name}</small>
+          </div>
+        )}
       </div>
-      <div className="form-control mt-8">
+      <div className="form-control mt-5">
         <label htmlFor="email">Email</label>
         <div className="relative">
-          <Input type="email" name="email" id="email" value={formData.email} />
+          <Input
+            type="email"
+            name="email"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+            hasError={errors.email}
+          />
           {errors.email && (
-            <small className="absolute right-4 top-1/2 -translate-y-[50%] text-red">
-              {errors.email}
-            </small>
+            <div className="mt-2 flex items-center gap-2">
+              <img src="/public/assets/icons/error.svg" alt="" />
+              <small className="text-red">{errors.email}</small>
+            </div>
           )}
         </div>
       </div>
@@ -64,24 +150,25 @@ function SignUp() {
               name="password"
               id="password"
               value={formData.password}
+              onChange={handleChange}
+              hasError={errors.password}
             />
-            {errors.password && (
-              <small className="absolute right-4 top-1/2 -translate-y-[50%] text-red">
-                {errors.password}
-              </small>
-            )}
-          </div>
-          {!errors.password && (
             <div
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-1/2 -translate-y-[50%] cursor-pointer"
             >
               {!showPassword ? <FaEye className="" /> : <FaEyeSlash />}
             </div>
+          </div>
+          {errors.password && (
+            <div className="mt-2 flex items-center gap-2">
+              <img src="/public/assets/icons/error.svg" alt="" />
+              <small className="text-red">{errors.password}</small>
+            </div>
           )}
         </div>
       </div>
-      <div className="mt-[2.625rem]">
+      <div className="mt-[1.875rem]">
         <Button variant="auth" size="md">
           {isLoading ? <>Processing...</> : "Sign up"}
         </Button>
