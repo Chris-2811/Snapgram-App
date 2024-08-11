@@ -122,8 +122,4 @@
   .invert-white {
     @apply brightness-0 invert transition;
   }
-
-  /*   .error-icon path path {
-    @apply fill-white;
-  } */
 }
