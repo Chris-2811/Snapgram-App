@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-interface Errors {
+import OAuth from "@/components/shared/_auth/OAuth";
   email: string;
   password: string;
   name: string;
@@ -85,6 +85,9 @@ function SignUp() {
         <Button variant="auth" size="md">
           {isLoading ? <>Processing...</> : "Sign up"}
         </Button>
+        <div className="mt-5">
+          <OAuth />
+        </div>
       </div>
       <div className="mt-5"></div>
       <p className="mt-8 text-center text-sm text-light-200">
