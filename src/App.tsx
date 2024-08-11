@@ -18,6 +18,7 @@ import {
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
+import { AuthContextProvider } from "./context/AuthContext";
 
 function App() {
   const protectedRoutes = [
@@ -36,19 +37,21 @@ function App() {
   ];
 
   return (
-    <Router>
-      <Routes>
-        <Route element={<MainLayout />}>
-          {protectedRoutes.map((item, index) => (
-            <Route key={index} path={item.path} element={item.element} />
-          ))}
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="/log-in" element={<LogIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <Routes>
+          <Route element={<MainLayout />}>
+            {protectedRoutes.map((item, index) => (
+              <Route key={index} path={item.path} element={item.element} />
+            ))}
+          </Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/log-in" element={<LogIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthContextProvider>
   );
 }
 
