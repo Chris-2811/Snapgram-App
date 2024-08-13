@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { IErrors } from "@/types";
 import OAuth from "@/components/shared/_auth/OAuth";
+import { useCreateUserAccount } from "@/lib/react-query/mutations";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -19,7 +22,10 @@ function SignUp() {
     password: "",
     name: "",
   });
-  const [isLoading, setIsLoading] = useState<boolean>();
+  const { toast } = useToast();
+
+  const { mutateAsync: createUserAccount, status: isCreatingAccount } =
+    useCreateUserAccount();
 
   function validateForm() {
     let isValid = true;
@@ -70,7 +76,7 @@ function SignUp() {
       ) {
         setErrors({
           ...errors,
-          [e.target.id]: "Name must be between 3 and 20 characters",
+          [errors.name]: "Name must be between 3 and 20 characters",
         });
         return;
       }
@@ -85,11 +91,30 @@ function SignUp() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    try {
+      if (!validateForm()) {
+        return;
+      }
 
-    console.log("success");
+      const newUser = await createUserAccount(formData);
+
+      if (!newUser) {
+        throw Error;
+      }
+      console.log("success");
+    } catch (error: any) {
+      let errorMessage = "There was a problem creating your account.";
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage = "This Email is already in use. Try another.";
+      }
+      toast({
+        title: "Uh oh! Something went wrong.",
+        variant: "destructive",
+        description: errorMessage,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+      console.log("catch block running");
+    }
   }
 
   return (
@@ -117,7 +142,7 @@ function SignUp() {
         </div>
         {errors.name && (
           <div className="mt-2 flex items-center gap-2">
-            <img src="/public/assets/icons/error.svg" alt="" />
+            <img src="/assets/icons/error.svg" alt="" />
             <small className="text-red">{errors.name}</small>
           </div>
         )}
@@ -135,7 +160,7 @@ function SignUp() {
           />
           {errors.email && (
             <div className="mt-2 flex items-center gap-2">
-              <img src="/public/assets/icons/error.svg" alt="" />
+              <img src="assets/icons/error.svg" alt="" />
               <small className="text-red">{errors.email}</small>
             </div>
           )}
@@ -162,7 +187,7 @@ function SignUp() {
           </div>
           {errors.password && (
             <div className="mt-2 flex items-center gap-2">
-              <img src="/public/assets/icons/error.svg" alt="" />
+              <img src="assets/icons/error.svg" alt="" />
               <small className="text-red">{errors.password}</small>
             </div>
           )}
@@ -170,7 +195,7 @@ function SignUp() {
       </div>
       <div className="mt-[1.875rem]">
         <Button variant="auth" size="md">
-          {isLoading ? <>Processing...</> : "Sign up"}
+          {isCreatingAccount === "pending" ? <>Processing...</> : "Sign up"}
         </Button>
         <div className="mt-5">
           <OAuth />
