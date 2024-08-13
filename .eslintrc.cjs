@@ -8,10 +8,11 @@ module.exports = {
     "plugin:react/jsx-runtime",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:react-query/recommended",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh"],
+  plugins: ["react-refresh", "react-query"],
   rules: {
     "react-refresh/only-export-components": [
       "warn",

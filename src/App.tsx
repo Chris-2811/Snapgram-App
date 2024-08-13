@@ -19,6 +19,7 @@ import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
 import ProtectedRoute from "./components/shared/ProtectedRoute";
 import { AuthContextProvider } from "./context/AuthContext";
+import { QueryProvider } from "./lib/react-query/QueryProvider";
 
 function App() {
   const protectedRoutes = [
@@ -37,7 +38,7 @@ function App() {
   ];
 
   return (
-    <AuthContextProvider>
+    <QueryProvider>
       <Router>
         <Routes>
           <Route element={<MainLayout />}>
@@ -52,6 +53,7 @@ function App() {
         </Routes>
       </Router>
     </AuthContextProvider>
+    </QueryProvider>
   );
 }
 
