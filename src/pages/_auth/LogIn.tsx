@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ILoginErrors } from "@/types";
 import OAuth from "@/components/shared/_auth/OAuth";
+import { useLogInAccount } from "@/lib/react-query/mutations";
+import { useNavigate } from "react-router-dom";
 
 function LogIn() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -16,6 +18,8 @@ function LogIn() {
     email: "",
     password: "",
   });
+  const { mutateAsync: logInAccount, status } = useLogInAccount();
+  const navigate = useNavigate();
 
   function validateForm() {
     let isValid = true;
@@ -42,10 +46,23 @@ function LogIn() {
     return isValid;
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (validateForm()) {
+      try {
+        const userCredential = await logInAccount({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (userCredential) {
+          navigate("/");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
