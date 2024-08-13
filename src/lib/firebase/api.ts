@@ -1,6 +1,9 @@
 import { INewUser } from "@/types";
 import { auth, db } from "./firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 
 // ====================
@@ -31,6 +34,22 @@ export async function createUserAccount(user: INewUser) {
   } catch (error) {
     console.error("Error creating user account", error);
     throw error;
+  }
+}
+
+export async function logInAccount(user: { email: string; password: string }) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      user.email,
+      user.password,
+    );
+
+    if (!userCredential) throw Error;
+
+    return userCredential;
+  } catch (error) {
+    console.log(error);
   }
 }
 
