@@ -8,6 +8,11 @@ export interface IUser {
   createdAt: string;
 }
 
+export interface INewUser {
+  email: string;
+  password: string;
+}
+
 export interface IErrors {
   email: string;
   password: string;
