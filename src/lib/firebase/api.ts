@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { setDoc, getDoc, Timestamp, doc } from "firebase/firestore";
 
 // ====================
 // AUTH
@@ -50,6 +50,28 @@ export async function logInAccount(user: { email: string; password: string }) {
     return userCredential;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function getCurrentUser(): Promise<IUser | null> {
+  try {
+    const docId = auth.currentUser?.uid;
+    if (!docId) {
+      throw new Error("No user found");
+    }
+    const docRef = doc(db, "users", docId);
+    const docSnapshot = await getDoc(docRef);
+
+    if (!docSnapshot.exists()) {
+      throw new Error("No user found");
+    }
+
+    console.log(docSnapshot.data());
+
+    return docSnapshot.data() as IUser;
+  } catch (error) {
+    console.error("Error getting current user", error);
+    return null;
   }
 }
 
