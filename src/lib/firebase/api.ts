@@ -2,7 +2,10 @@ import { INewUser } from "@/types";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
+  setPersistence,
   signInWithEmailAndPassword,
+  browserSessionPersistence,
+  sendEmailVerification,
 } from "firebase/auth";
 import { setDoc, getDoc, Timestamp, doc } from "firebase/firestore";
 
