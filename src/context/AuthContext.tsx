@@ -33,7 +33,7 @@ interface IContext {
   /* checkAuthUser: () => Promise<boolean>; */
 }
 
-const AuthContext = createContext<IContext>(INITIAL_STATE);
+export const AuthContext = createContext<IContext>(INITIAL_STATE);
 
 export const AuthContextProvider = ({
   children,
@@ -50,7 +50,8 @@ export const AuthContextProvider = ({
       async (currentUser: User | null) => {
         setIsLoading(true);
         try {
-          if (currentUser) {
+          if (currentUser && currentUser.emailVerified) {
+            console.log("Current User:", currentUser);
             const userData = await getCurrentUser();
             if (userData) {
               setUser(userData);
@@ -58,6 +59,7 @@ export const AuthContextProvider = ({
             }
           } else {
             setUser(INITIAL_USER);
+            setIsAuthenticated(false);
           }
         } catch (error) {
           console.log(error);
