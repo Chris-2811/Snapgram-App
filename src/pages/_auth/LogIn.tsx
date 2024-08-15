@@ -7,6 +7,8 @@ import { ILoginErrors } from "@/types";
 import OAuth from "@/components/shared/_auth/OAuth";
 import { useLogInAccount } from "@/lib/react-query/mutations";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 function LogIn() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -20,6 +22,7 @@ function LogIn() {
   });
   const { mutateAsync: logInAccount, status } = useLogInAccount();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   function validateForm() {
     let isValid = true;
@@ -39,6 +42,7 @@ function LogIn() {
 
     if (!password) {
       isValid = false;
+
       newErrors.password = "Please enter your password.";
     }
 
@@ -56,8 +60,21 @@ function LogIn() {
           password: formData.password,
         });
 
-        if (userCredential) {
-          navigate("/");
+        const user = userCredential?.user;
+
+        if (!user?.emailVerified) {
+          toast({
+            title: "Uh oh! Something went wrong.",
+            variant: "destructive",
+            description: "Please verify your email address.",
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+          });
+
+          return;
+        } else {
+          if (userCredential) {
+            navigate("/");
+          }
         }
       } catch (error) {
         console.log(error);
