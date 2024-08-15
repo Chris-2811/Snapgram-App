@@ -1,4 +1,4 @@
-import { INewUser } from "@/types";
+import { INewUser, IUser } from "@/types";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -23,7 +23,7 @@ export async function createUserAccount(user: INewUser) {
 
     if (!newAccount) throw Error;
 
-    const newUser = await addDoc(collection(db, "users"), {
+    const newUser = {
       email: user.email,
       id: newAccount.user.uid,
       bio: "",
@@ -31,8 +31,12 @@ export async function createUserAccount(user: INewUser) {
       username: "",
       name: "",
       createdAt: Timestamp.now(),
-    });
+    };
 
+    const userDocRef = doc(db, "users", newAccount.user.uid);
+    await setDoc(userDocRef, newUser);
+
+    await sendEmailVerification(newAccount.user);
     return newUser;
   } catch (error) {
     console.error("Error creating user account", error);
@@ -49,10 +53,10 @@ export async function logInAccount(user: { email: string; password: string }) {
     );
 
     await setPersistence(auth, browserSessionPersistence);
-
     return userCredential;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 

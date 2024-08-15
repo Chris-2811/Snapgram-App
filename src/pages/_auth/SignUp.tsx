@@ -96,12 +96,15 @@ function SignUp() {
         return;
       }
 
-      const newUser = await createUserAccount(formData);
+      const newUser = await createUserAccount({
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (!newUser) {
         throw Error;
       }
-      console.log("success");
+
     } catch (error: any) {
       let errorMessage = "There was a problem creating your account.";
       if (error.code === "auth/email-already-in-use") {
