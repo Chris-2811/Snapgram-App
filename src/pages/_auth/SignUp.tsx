@@ -9,6 +9,7 @@ import OAuth from "@/components/shared/_auth/OAuth";
 import { useCreateUserAccount } from "@/lib/react-query/mutations";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -23,6 +24,7 @@ function SignUp() {
     name: "",
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const { mutateAsync: createUserAccount, status: isCreatingAccount } =
     useCreateUserAccount();
@@ -105,6 +107,7 @@ function SignUp() {
         throw Error;
       }
 
+      navigate("/");
     } catch (error: any) {
       let errorMessage = "There was a problem creating your account.";
       if (error.code === "auth/email-already-in-use") {
@@ -116,7 +119,6 @@ function SignUp() {
         description: errorMessage,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-      console.log("catch block running");
     }
   }
 
