@@ -45,7 +45,7 @@ export async function logInAccount(user: { email: string; password: string }) {
       user.password,
     );
 
-    if (!userCredential) throw Error;
+    await setPersistence(auth, browserSessionPersistence);
 
     return userCredential;
   } catch (error) {
