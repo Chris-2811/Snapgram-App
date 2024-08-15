@@ -66,12 +66,27 @@ export async function getCurrentUser(): Promise<IUser | null> {
       throw new Error("No user found");
     }
 
-    console.log(docSnapshot.data());
-
     return docSnapshot.data() as IUser;
   } catch (error) {
     console.error("Error getting current user", error);
     return null;
+  }
+}
+
+export async function saveUserToDB(user: {
+  id: string;
+  email: string;
+  bio: string;
+  photoUrl: string;
+  username: string;
+  name: string;
+  createdAt: Timestamp;
+}) {
+  try {
+    const docRef = doc(db, "users", user.id);
+    await setDoc(docRef, user);
+  } catch (error) {
+    console.error("Error saving user to DB", error);
   }
 }
 
