@@ -6,7 +6,8 @@
   /* Set core body defaults */
   body {
     min-height: 100vh;
-    line-height: 1.5;
+    line-height: 1.4;
+    @apply bg-dark-200;
   }
 
   /* Prevent font size inflation */
