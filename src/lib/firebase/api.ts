@@ -7,7 +7,18 @@ import {
   browserSessionPersistence,
   sendEmailVerification,
 } from "firebase/auth";
-import { setDoc, getDoc, Timestamp, doc } from "firebase/firestore";
+import {
+  setDoc,
+  getDoc,
+  Timestamp,
+  doc,
+  query,
+  orderBy,
+  startAfter,
+  collection,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 
 // ====================
 // AUTH
@@ -100,3 +111,35 @@ export async function saveUserToDB(user: {
 // ====================
 // POSTS
 // ====================
+
+// ====================
+// USERS
+// ====================
+
+export async function getUsers({ pageParam }: { pageParam: string }) {
+  let q;
+
+  if (pageParam) {
+    const lastDocSnapshot = await getDoc(doc(db, "users", pageParam));
+
+    q = query(
+      collection(db, "users"),
+      orderBy("createdAt"),
+      startAfter(lastDocSnapshot),
+      limit(10),
+    );
+  } else {
+    q = query(collection(db, "users"), orderBy("createdAt"), limit(10));
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot) throw new Error();
+
+  const users = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as IUser[];
+
+  return users;
+}
