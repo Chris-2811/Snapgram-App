@@ -77,6 +77,27 @@ function LogIn() {
           }
         }
       } catch (error) {
+        let errorMessage = "Something went wrong. Please try again.";
+
+        if (error instanceof Error) {
+          if (error.message.includes("invalid-credential")) {
+            errorMessage = "Invalid email or password.";
+          } else if (error.message.includes("temporarily disabled")) {
+            errorMessage =
+              "Your account has been temporarily locked due to too many failed login attempts. Please try again later.";
+          }
+        } else if (typeof error === "string") {
+          errorMessage = error;
+        } else {
+          errorMessage = "An unknown error occurred";
+        }
+
+        toast({
+          title: "Uh oh! Something went wrong.",
+          variant: "destructive",
+          description: errorMessage,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
         console.log(error);
       }
     }
