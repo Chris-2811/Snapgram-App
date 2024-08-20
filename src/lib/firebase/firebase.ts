@@ -3,6 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
+import { createRandomUser, createUsers } from "./dummyData";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
@@ -19,3 +20,13 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
+
+// Connect to the Authentication emulator
+
+/* Dummy Data */
+const shouldCreateDummyUsers =
+  import.meta.env.VITE_REACT_APP_CREATE_DUMMY_USERS === "false";
+
+if (shouldCreateDummyUsers) {
+  await createUsers();
+}
