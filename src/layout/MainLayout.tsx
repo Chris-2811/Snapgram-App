@@ -6,11 +6,13 @@ import Bottombar from "@/components/shared/_main/Bottombar";
 
 function MainLayout() {
   return (
-    <div>
+    <div className="w-full lg:flex">
       <Topbar />
-      <Bottombar />
       <LeftSidebar />
-      <Outlet />
+      <section className="flex-1">
+        <Outlet />
+      </section>
+      <Bottombar />
     </div>
   );
 }
