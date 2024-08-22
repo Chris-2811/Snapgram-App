@@ -25,7 +25,7 @@ export const analytics = getAnalytics(app);
 
 /* Dummy Data */
 const shouldCreateDummyUsers =
-  import.meta.env.VITE_REACT_APP_CREATE_DUMMY_USERS === "false";
+  import.meta.env.VITE_REACT_APP_CREATE_DUMMY_USERS === "true";
 
 if (shouldCreateDummyUsers) {
   await createUsers();
