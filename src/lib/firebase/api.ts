@@ -1,3 +1,4 @@
+import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
 import { INewUser, IUser } from "@/types";
 import { auth, db } from "./firebase";
 import {
@@ -112,9 +113,48 @@ export async function saveUserToDB(user: {
 // POSTS
 // ====================
 
+export async function getPosts({ pageParam }: { pageParam: string | null }) {
+  let q;
+
+  if (pageParam) {
+    const lastDocSnapshot = await getDoc(doc(db, "posts", pageParam));
+
+    q = query(
+      collection(db, "posts"),
+      orderBy("createdAt"),
+      startAfter(lastDocSnapshot),
+      limit(10),
+    );
+  } else {
+    q = query(collection(db, "posts"), orderBy("createdAt"), limit(10));
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot) throw new Error();
+
+  const posts = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  return posts;
+}
+
 // ====================
 // USERS
 // ====================
+
+export async function getUserById(userId: string) {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data() as IUser;
+  } else {
+    throw new Error("No such document!");
+  }
+}
 
 export async function getUsers({ pageParam }: { pageParam: string | null }) {
   let q;
