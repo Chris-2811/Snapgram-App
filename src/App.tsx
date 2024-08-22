@@ -17,7 +17,6 @@ import {
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
-import ProtectedRoute from "./components/shared/ProtectedRoute";
 import { AuthContextProvider } from "./context/AuthContext";
 import { QueryProvider } from "./lib/react-query/QueryProvider";
 import { Toaster } from "./components/ui/toaster";
