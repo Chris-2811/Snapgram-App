@@ -116,7 +116,7 @@ export async function saveUserToDB(user: {
 // USERS
 // ====================
 
-export async function getUsers({ pageParam }: { pageParam: string }) {
+export async function getUsers({ pageParam }: { pageParam: string | null }) {
   let q;
 
   if (pageParam) {

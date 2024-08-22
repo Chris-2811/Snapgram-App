@@ -5,7 +5,7 @@ import { getUsers } from "../firebase/api";
 export const useGetUsers = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_USERS, null],
-    queryFn: ({ pageParam = 0 }) => getUsers(pageParam), // Pass pageParam to getUsers
+    queryFn: ({ pageParam = 0 }) => getUsers({ pageParam }), // Pass pageParam to getUsers
     getNextPageParam: (lastPage: any) => {
       if (lastPage.length < 10) {
         return undefined; // Return undefined instead of null when there are
@@ -20,6 +20,6 @@ export const useGetUsers = () => {
 
       return lastId;
     },
-    initialPageParam: 0,
+    initialPageParam: null,
   });
 };
