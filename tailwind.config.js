@@ -29,6 +29,7 @@ module.exports = {
       screens: {
         xs: "480px",
         "2xl": "1400px",
+        "3xl": "1560px",
       },
       colors: {
         primary: "hsl(244, 100%, 75%)",
