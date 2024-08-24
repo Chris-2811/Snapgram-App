@@ -23,3 +23,13 @@ export interface ILoginErrors {
   email: string;
   password: string;
 }
+
+export interface IPost {
+  caption: string;
+  createdAt: string;
+  location: string;
+  photoUrls: string[];
+  postId: string;
+  tags: string[];
+  userId: string;
+}
