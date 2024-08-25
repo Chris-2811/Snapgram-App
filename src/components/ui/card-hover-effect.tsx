@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "./button";
 import { useGetUsers } from "@/lib/react-query/queries";
+import { useNavigate } from "react-router-dom";
 
 export const HoverEffect = ({
   items,
@@ -17,14 +18,14 @@ export const HoverEffect = ({
   return (
     <div
       className={cn(
-        "lg:gap-210 3xl:grid-cols-2 grid grid-cols-1 gap-2 py-10 lg:max-h-[1024px]",
+        "lg:gap-210 grid grid-cols-1 gap-2 py-10 lg:max-h-[1024px] 3xl:grid-cols-2",
         className,
       )}
     >
       {items?.map((item, idx) => (
         <Link
-          to={item?.link}
-          key={item?.link}
+          to={`/profile/${item?.userId}`}
+          key={item?.userId}
           className="group relative block h-full w-full cursor-default p-2"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -48,14 +49,12 @@ export const HoverEffect = ({
           </AnimatePresence>
           <Card item={item}>
             <div className="grid h-[142px] grid-rows-[auto_1fr_auto] place-items-center">
-              <div>
-                <Link to={`/profile/${item.id}`}>
-                  <img
-                    src={item.photoUrl}
-                    alt="avatar"
-                    className={`h-[54px] w-[54px] rounded-full object-cover`}
-                  />
-                </Link>
+              <div className="cursor-pointer">
+                <img
+                  src={item.photoUrl}
+                  alt="avatar"
+                  className={`h-[54px] w-[54px] rounded-full object-cover`}
+                />
               </div>
               <div className="row-start-2 row-end-3 mt-[0.6125rem] self-start text-center leading-none">
                 <h3
