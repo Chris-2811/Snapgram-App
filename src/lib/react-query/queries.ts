@@ -18,7 +18,7 @@ export const useGetUsers = () => {
         return undefined; // Return undefined instead of null when there are
       }
 
-      const lastId = lastPage[lastPage.length - 1]?.id;
+      const lastId = lastPage[lastPage.length - 1]?.userId;
 
       if (!lastId) {
         console.error("Last user ID not found");
@@ -40,7 +40,7 @@ export const useGetPosts = () => {
         return undefined; // Return undefined instead of null when there are
       }
 
-      const lastId = lastPage[lastPage.length - 1]?.id;
+      const lastId = lastPage[lastPage.length - 1]?.userId;
 
       if (!lastId) {
         console.error("Last post ID not found");

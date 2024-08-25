@@ -1,5 +1,5 @@
 import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
-import { INewUser, IUser } from "@/types";
+import { INewUser, IPost, IUser } from "@/types";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -134,9 +134,8 @@ export async function getPosts({ pageParam }: { pageParam: string | null }) {
   if (!querySnapshot) throw new Error();
 
   const posts = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
     ...doc.data(),
-  }));
+  })) as IPost[];
 
   return posts;
 }
@@ -177,7 +176,6 @@ export async function getUsers({ pageParam }: { pageParam: string | null }) {
   if (!querySnapshot) throw new Error();
 
   const users = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
     ...doc.data(),
   })) as IUser[];
 
