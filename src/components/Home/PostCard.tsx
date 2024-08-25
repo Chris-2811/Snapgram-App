@@ -12,8 +12,6 @@ function PostCard({ post }: { post: IPost }) {
   const [isCaptionExpanded, setIsCaptionExpanded] = useState<boolean>(false);
   const { data: user } = useGetUserById(post.userId);
 
-  console.log("data", user);
-
   const navigate = useNavigate();
 
   if (!post || !post.userId) {
@@ -33,10 +31,6 @@ function PostCard({ post }: { post: IPost }) {
     if (post.photoUrls.length > 1) {
       setActivePhotoIndex((prev) => (prev + 1) % post.photoUrls.length);
     }
-  }
-
-  if (post) {
-    console.log(post?.photoUrls[0]);
   }
 
   const swipeHandlers = useSwipeable({
