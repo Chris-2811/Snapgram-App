@@ -34,7 +34,7 @@ function OAuth() {
 
       const newUser = {
         email: user.email,
-        id: user.uid,
+        userId: user.uid,
         bio: "",
         photoUrl: "",
         username: "",

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { getCurrentUser } from "@/lib/firebase/api";
 
 const INITIAL_USER = {
-  id: "",
+  userId: "",
   email: "",
   bio: "",
   photoUrl: "",
@@ -51,10 +51,10 @@ export const AuthContextProvider = ({
         setIsLoading(true);
         try {
           if (currentUser && currentUser.emailVerified) {
-            console.log("Current User:", currentUser);
-            const userData = await getCurrentUser();
-            if (userData) {
-              setUser(userData);
+            const user = await getCurrentUser(currentUser.uid);
+
+            if (user) {
+              setUser(user);
               setIsAuthenticated(true);
             }
           } else {

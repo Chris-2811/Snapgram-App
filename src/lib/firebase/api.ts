@@ -72,9 +72,8 @@ export async function logInAccount(user: { email: string; password: string }) {
   }
 }
 
-export async function getCurrentUser(): Promise<IUser | null> {
+export async function getCurrentUser(docId: string) {
   try {
-    const docId = auth.currentUser?.uid;
     if (!docId) {
       throw new Error("No user found");
     }
@@ -93,7 +92,7 @@ export async function getCurrentUser(): Promise<IUser | null> {
 }
 
 export async function saveUserToDB(user: {
-  id: string;
+  userId: string;
   email: string;
   bio: string;
   photoUrl: string;
@@ -102,7 +101,7 @@ export async function saveUserToDB(user: {
   createdAt: Timestamp;
 }) {
   try {
-    const docRef = doc(db, "users", user.id);
+    const docRef = doc(db, "users", user.userId);
     await setDoc(docRef, user);
   } catch (error) {
     console.error("Error saving user to DB", error);

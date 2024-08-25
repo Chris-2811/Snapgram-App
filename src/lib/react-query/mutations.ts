@@ -19,7 +19,7 @@ export const useLogInAccount = () => {
 export const useSaveUserToDB = () => {
   return useMutation({
     mutationFn: (user: {
-      id: string;
+      userId: string;
       email: string;
       bio: string;
       photoUrl: string;
