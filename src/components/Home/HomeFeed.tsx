@@ -20,7 +20,7 @@ function Home() {
   }, [inView, hasNextPage]);
 
   return (
-    <div className="w-full px-4 pt-[1.625rem] md:px-10 md:pt-8 lg:px-[3.25rem] lg:pt-[3.25rem] xl:px-[5rem] 3xl:px-[6rem]">
+    <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <h2 className="heading-md">Home Feed</h2>
       </div>
