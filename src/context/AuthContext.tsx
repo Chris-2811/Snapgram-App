@@ -16,7 +16,7 @@ const INITIAL_USER = {
 };
 
 const INITIAL_STATE = {
-  user: null,
+  user: INITIAL_USER,
   isAuthenticated: false,
   isLoading: false,
   setUser: () => {},
@@ -25,7 +25,7 @@ const INITIAL_STATE = {
 };
 
 interface IContext {
-  user: IUser | null;
+  user: IUser;
   isAuthenticated: boolean;
   isLoading: boolean;
   setUser: React.Dispatch<React.SetStateAction<IUser>>;
