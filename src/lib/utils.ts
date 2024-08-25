@@ -28,3 +28,8 @@ export function formatPostDate(createdAt: Timestamp | String) {
 
   return formattedDate.replace(/am|pm/g, (match) => match.toUpperCase());
 }
+
+export function getInitials(name: string) {
+  const [firstName, lastName] = name.split(" ");
+  return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+}
