@@ -6,7 +6,7 @@ import Bottombar from "@/components/shared/_main/Bottombar";
 
 function MainLayout() {
   return (
-    <div className="w-full lg:flex">
+    <div className="w-full md:flex">
       <Topbar />
       <LeftSidebar />
       <section className="flex-1">

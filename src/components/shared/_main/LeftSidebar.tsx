@@ -35,18 +35,23 @@ function LeftSidebar() {
     encodeURIComponent(username.toLowerCase());
 
   const profileIdentifier = user?.username
-    ? encodeUsername(user.username)
+    ? encodeUsername(user?.username)
     : user?.userId;
 
   return (
-    <div className="sticky top-0 hidden h-screen max-h-[1024px] max-w-[270px] border border-red bg-dark-200 px-6 pb-8 pt-12 text-light-100 lg:flex lg:min-w-[270px] lg:flex-col lg:justify-between">
+    <div className="sticky top-0 hidden h-screen max-h-[1024px] max-w-[270px] border border-red bg-dark-200 pb-8 text-light-100 md:flex md:flex-col md:justify-between md:px-4 md:pt-9 lg:min-w-[270px] lg:px-6 lg:pt-12">
       <div>
         <img
           src={"/assets/images/logo.svg"}
           alt="company logo"
-          className="w-[174px]"
+          className="w-[174px] md:hidden lg:block"
         />
-        <div className="my-11 flex items-center gap-3">
+        <img
+          src="assets/icons/union.svg"
+          alt="company logo small"
+          className="mx-auto lg:hidden"
+        />
+        <div className="my-11 flex items-center gap-3 md:justify-center lg:justify-start">
           <Link to={`/profile/${profileIdentifier}`}>
             <Avatar className="">
               {user?.photoUrl ? (
@@ -56,12 +61,12 @@ function LeftSidebar() {
                 </>
               ) : (
                 <div className="font- grid h-full w-full place-items-center bg-gray-200 text-lg text-black">
-                  {user && getInitials(user?.name)}
+                  {user?.name && getInitials(user?.name)}
                 </div>
               )}
             </Avatar>
           </Link>
-          <div>
+          <div className="hidden lg:block">
             <Link to={`/profile/${profileIdentifier}`}>
               <p className="text-lg font-bold tracking-[-1px] text-light-200">
                 {user?.name}
@@ -91,7 +96,7 @@ function LeftSidebar() {
                         alt=""
                         className={`${isActive && "invert-white"}`}
                       />
-                      <p>{link.label}</p>
+                      <p className="hidden lg:block">{link.label}</p>
                     </div>
                   </NavLink>
                 </li>
@@ -100,17 +105,17 @@ function LeftSidebar() {
           </ul>
         </nav>
       </div>
-      <div className="xxl:mt-[8.75rem]">
+      <div className="">
         <div
           onClick={handleLogout}
           className="flex cursor-pointer items-center gap-4 p-4"
         >
           <img src="/assets/icons/logout.svg" alt="" />
-          <p>Logout</p>
+          <p className="hidden lg:block">Logout</p>
         </div>
         <div className="flex cursor-pointer items-center gap-4 p-4">
           <img src="/assets/icons/settings.svg" alt="" className="w-6" />
-          <p>Settings</p>
+          <p className="hidden lg:block">Settings</p>
         </div>
       </div>
     </div>

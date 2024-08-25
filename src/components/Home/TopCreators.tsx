@@ -12,12 +12,12 @@ function TopCreators({ user }: any) {
   };
 
   return (
-    <div className="sticky top-0 hidden h-screen w-full max-w-[465px] grow border border-orange-400 px-6 pt-10 lg:max-h-[1024px] xl:block">
+    <div className="sticky top-0 hidden h-screen w-full max-w-fit grow border border-orange-400 px-6 pt-10 lg:max-h-[1024px] xl:block 3xl:max-w-[465px]">
       <h1 className="heading-md">Top Creators</h1>
-      <div className="3xl:hidden block">
+      <div className="block 3xl:hidden">
         <HoverEffect items={usersToShow.default} />
       </div>
-      <div className="3xl:block hidden">
+      <div className="hidden 3xl:block">
         <HoverEffect items={usersToShow.xxl} />
       </div>
     </div>

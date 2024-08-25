@@ -6,7 +6,7 @@ function Topbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative border-b border-b-dark-400 lg:hidden">
+    <div className="relative border-b border-b-dark-400 md:hidden">
       <div className="container-sm flex items-center justify-between py-5">
         <Link to="/">
           <img
