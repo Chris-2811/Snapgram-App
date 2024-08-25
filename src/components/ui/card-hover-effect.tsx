@@ -24,7 +24,7 @@ export const HoverEffect = ({
     >
       {items?.map((item, idx) => (
         <Link
-          to={`/profile/${item?.userId}`}
+          to={`/profile/${item?.username}`}
           key={item?.userId}
           className="group relative block h-full w-full cursor-default p-2"
           onMouseEnter={() => setHoveredIndex(idx)}
