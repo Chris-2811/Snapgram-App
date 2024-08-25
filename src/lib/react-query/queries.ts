@@ -34,13 +34,13 @@ export const useGetUsers = () => {
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_POSTS, null],
-    queryFn: ({ pageParam = 0 }) => getPosts({ pageParam }), // Pass pageParam to getPosts
+    queryFn: ({ pageParam = null }) => getPosts({ pageParam }), // Pass pageParam to getPosts
     getNextPageParam: (lastPage: any) => {
       if (lastPage.length < 10) {
         return undefined; // Return undefined instead of null when there are
       }
 
-      const lastId = lastPage[lastPage.length - 1]?.userId;
+      const lastId = lastPage[lastPage.length - 1]?.postId;
 
       if (!lastId) {
         console.error("Last post ID not found");
