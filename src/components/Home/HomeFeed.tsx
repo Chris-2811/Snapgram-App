@@ -7,7 +7,6 @@ function Home() {
   const {
     data: posts,
     isPending: isPostLoading,
-    isError: isErrorPosts,
     fetchNextPage,
     hasNextPage,
   } = useGetPosts();
@@ -20,10 +19,8 @@ function Home() {
     }
   }, [inView, hasNextPage]);
 
-  console.log(posts);
-
   return (
-    <div className="px-4 pt-[1.625rem] md:px-10 lg:px-[3.25rem] lg:pt-[3.25rem]">
+    <div className="px-4 pt-[1.625rem] md:px-10 lg:px-[3.25rem] lg:pt-[3.25rem] xl:px-[5rem] 3xl:px-[7rem]">
       <div className="lg:w-[600px]">
         <div></div>
         <div className="flex w-full items-center justify-between">
@@ -37,7 +34,7 @@ function Home() {
               <ul role="list" className="mt-10 flex flex-col gap-10">
                 {posts.pages.flatMap((page) =>
                   page.map((post) => (
-                    <li key={post.id}>
+                    <li key={post.postId}>
                       <PostCard post={post} />
                     </li>
                   )),
