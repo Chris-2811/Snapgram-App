@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { logOutUser } from "@/lib/firebase/api";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/context/AuthContext";
 
 function Topbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  async function handleLogout(e: React.MouseEvent<HTMLElement>) {
+    console.log("Clicked element:", e.target);
+
+    try {
+      await logOutUser();
+      setIsAuthenticated(false);
+      navigate("/log-in");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  }
 
   return (
     <div className="relative border-b border-b-dark-400 md:hidden">
@@ -42,49 +59,51 @@ function Topbar() {
       {isOpen && (
         <div className="absolute z-50 w-full bg-black px-9 pb-12 pt-10">
           <div className="absolute inset-0"></div>
-          <nav aria-label="primary-navigation">
-            <ul role="list" className="inline-block space-y-[2.125rem]">
-              <li>
-                <Link to="explore">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src="/assets/icons/wallpaper.svg"
-                      alt=""
-                      className="w-[1.125rem]"
-                    />
-                    <p>Explore</p>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                <Link to="">
-                  <div className="flex items-center gap-2">
-                    <img src="/assets/icons/bell.svg" alt="" />
-                    <p>Notifications</p>
-                  </div>
-                </Link>
-              </li>
-              <li>
-                {" "}
-                <Link to="">
-                  <div className="flex items-center gap-2">
-                    <img src="/assets/icons/settings.svg" alt="" />
-                    <p>Settings</p>
-                  </div>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-          <Button
-            variant="destructive"
-            size="lg"
-            className="mt-8 w-full max-w-[303px]"
-          >
-            <div className="flex items-center gap-2">
-              <img src="/assets/icons/logout-light.svg" alt="" className="" />
-              <p>Logout</p>
-            </div>
-          </Button>
+          <div className="relative z-50">
+            <nav aria-label="primary-navigation">
+              <ul role="list" className="inline-block space-y-[2.125rem]">
+                <li>
+                  <Link to="explore">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src="/assets/icons/wallpaper.svg"
+                        alt=""
+                        className="w-[1.125rem]"
+                      />
+                      <p>Explore</p>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="">
+                    <div className="flex items-center gap-2">
+                      <img src="/assets/icons/bell.svg" alt="" />
+                      <p>Notifications</p>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="">
+                    <div className="flex items-center gap-2">
+                      <img src="/assets/icons/settings.svg" alt="" />
+                      <p>Settings</p>
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <Button
+              variant="destructive"
+              size="lg"
+              className="mt-8 w-full max-w-[303px] cursor-pointer"
+              onClick={handleLogout}
+            >
+              <div className="flex items-center gap-2">
+                <img src="/assets/icons/logout-light.svg" alt="" className="" />
+                <p>Logout</p>
+              </div>
+            </Button>
+          </div>
         </div>
       )}
     </div>

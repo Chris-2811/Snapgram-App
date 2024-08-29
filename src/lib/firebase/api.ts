@@ -20,6 +20,7 @@ import {
   limit,
   getDocs,
 } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 
 // ====================
 // AUTH
@@ -105,6 +106,17 @@ export async function saveUserToDB(user: {
     await setDoc(docRef, user);
   } catch (error) {
     console.error("Error saving user to DB", error);
+  }
+}
+
+export async function logOutUser() {
+  try {
+    // Log out the user
+    await signOut(auth);
+    // Redirect to the login page
+    console.log("User logged out successfully");
+  } catch (error) {
+    console.error("Error logging out:", error);
   }
 }
 
