@@ -117,23 +117,25 @@ function PostForm({ post, action }: PostFormProps) {
           }
         }
 
-        try {
-          if (action === "update") {
-            try {
-              const docRef = doc(db, "posts", post?.userId as string);
-              await updateDoc(docRef, {
-                caption: formData.caption,
-                location: formData.location,
-                tags: formData.tags.split(",").map((tag) => tag.trim()),
-                photoUrls: downloadUrl
-                  ? arrayUnion(downloadUrl)
-                  : post?.photoUrls,
-              });
-              console.log("success");
-            } catch (error) {
-              console.log(error);
-            }
-          } else {
+        if (action === "update") {
+          try {
+            const docRef = doc(db, "posts", post?.postId as string);
+            await updateDoc(docRef, {
+              caption: formData.caption,
+              location: formData.location,
+              tags: formData.tags.split(",").map((tag) => tag.trim()),
+              photoUrls: downloadUrl ? [downloadUrl] : post?.photoUrls,
+            });
+            console.log("success");
+            toast({
+              title: "Post updated successfully",
+              description: "Friday, February 10, 2023 at 5:57 PM",
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          try {
             const postsCollectionRef = collection(db, "posts");
             const newPost = {
               ...formData,
@@ -162,12 +164,10 @@ function PostForm({ post, action }: PostFormProps) {
 
             setFile(null);
             setResetFileUploader(true);
+          } catch (error) {
+            console.error("Error logging out:", error);
           }
-        } catch (error) {
-          console.log(error);
         }
-
-        console.log(file);
       }
     }
   }
