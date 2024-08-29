@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useGetPosts } from "@/lib/react-query/queries";
 import PostCard from "./PostCard";
 import { useInView } from "react-intersection-observer";
+import Filter from "@/components/shared/_main/Filter";
 
 function Home() {
   const {
@@ -21,8 +22,12 @@ function Home() {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full max-w-[600px] items-center justify-between">
         <h2 className="heading-md">Home Feed</h2>
+        <div className="flex items-center gap-[0.625rem] rounded-[14px] bg-dark-400 px-4 py-3">
+          <p className="text-xs font-medium">All</p>
+          <Filter />
+        </div>
       </div>
       <div className="md:flex md:w-full md:flex-col lg:items-start">
         <div className="max-w-[600px]">
