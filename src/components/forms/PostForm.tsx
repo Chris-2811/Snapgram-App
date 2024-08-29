@@ -249,7 +249,7 @@ function PostForm({ post, action }: PostFormProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" className="mt-10 bg-primary px-5 py-3">
+        <Button type="submit" className="bg-primary px-5 py-3">
           Share Post
         </Button>
       </div>
