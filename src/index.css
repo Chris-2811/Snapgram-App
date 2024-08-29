@@ -95,19 +95,19 @@
   }
 
   .heading-md {
-    @apply text-[1.875rem] font-bold;
+    @apply text-[1.875rem] font-bold tracking-[-1px];
   }
 
   .heading-sm {
-    @apply text-[1.5rem] font-bold;
+    @apply text-[1.5rem] font-bold tracking-[-1px];
   }
 
   /* Layout */
   .container-sm {
-    @apply mx-auto px-4 md:px-10;
+    @apply mx-auto px-4 tracking-[-1px] md:px-10;
   }
   .container-sm {
-    @apply mx-auto px-4 md:px-10;
+    @apply mx-auto px-4 tracking-[-1px] md:px-10;
   }
 
   /* Utilities */
