@@ -60,7 +60,7 @@ function LeftSidebar() {
                   <AvatarFallback>JD</AvatarFallback>
                 </>
               ) : (
-                <div className="font- grid h-full w-full place-items-center bg-gray-200 text-lg text-black">
+                <div className="grid h-full w-full place-items-center bg-gray-200 text-lg text-black">
                   {user?.name && getInitials(user?.name)}
                 </div>
               )}
