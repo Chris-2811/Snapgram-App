@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getUsers, getPosts, getUserById } from "../firebase/api";
+import { getUsers, getPosts, getUserById, getPostById } from "../firebase/api";
 
 export const useGetUserById = (userId: string) => {
   return useQuery({
@@ -50,5 +50,13 @@ export const useGetPosts = () => {
       return lastId;
     },
     initialPageParam: null,
+  });
+};
+
+export const useGetPostById = (postId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
   });
 };

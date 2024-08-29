@@ -1,4 +1,3 @@
-import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
 import { INewUser, IPost, IUser } from "@/types";
 import { auth, db } from "./firebase";
 import {
@@ -151,6 +150,19 @@ export async function getPosts({ pageParam }: { pageParam: string | null }) {
   console.log("fetchedPosts: ", posts);
 
   return posts;
+}
+
+export async function getPostById(postId: string) {
+  if (!postId) throw Error;
+
+  const docRef = doc(db, "posts", postId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data() as IPost;
+  } else {
+    throw new Error("No such document!");
+  }
 }
 
 // ====================
