@@ -137,13 +137,16 @@ function PostForm({ post, action }: PostFormProps) {
             const postsCollectionRef = collection(db, "posts");
             const newPost = {
               ...formData,
-              tags: formData.tags.split(",").map((tag) => tag.trim()),
-            };
-            await addDoc(postsCollectionRef, {
-              ...newPost,
               photoUrls: [downloadUrl],
               userId: user.userId,
               createdAt: serverTimestamp(),
+              tags: formData.tags.split(",").map((tag) => tag.trim()),
+            };
+
+            const docRef = await addDoc(postsCollectionRef, newPost);
+
+            await updateDoc(doc(db, "posts", docRef.id), {
+              postId: docRef.id,
             });
 
             toast({

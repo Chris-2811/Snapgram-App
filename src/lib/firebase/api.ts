@@ -132,12 +132,12 @@ export async function getPosts({ pageParam }: { pageParam: string | null }) {
 
     q = query(
       collection(db, "posts"),
-      orderBy("createdAt"),
+      orderBy("createdAt", "desc"),
       startAfter(lastDocSnapshot),
       limit(10),
     );
   } else {
-    q = query(collection(db, "posts"), orderBy("createdAt"), limit(10));
+    q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(10));
   }
 
   const querySnapshot = await getDocs(q);
@@ -147,6 +147,8 @@ export async function getPosts({ pageParam }: { pageParam: string | null }) {
   const posts = querySnapshot.docs.map((doc) => ({
     ...doc.data(),
   })) as IPost[];
+
+  console.log("fetchedPosts: ", posts);
 
   return posts;
 }

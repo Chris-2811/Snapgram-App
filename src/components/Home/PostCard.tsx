@@ -6,11 +6,13 @@ import { formatPostDate } from "@/lib/utils";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { IPost } from "@/types";
+import { AuthContext } from "@/context/AuthContext";
 
 function PostCard({ post }: { post: IPost }) {
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
   const [isCaptionExpanded, setIsCaptionExpanded] = useState<boolean>(false);
-  const { data: user } = useGetUserById(post.userId);
+  const { data: postAuthor } = useGetUserById(post.userId);
+  const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -51,7 +53,9 @@ function PostCard({ post }: { post: IPost }) {
             <Link to={`/profile/${post.userId}`}>
               <img
                 src={
-                  user?.photoUrl ? user.photoUrl : "/assets/images/profile.png"
+                  postAuthor?.photoUrl
+                    ? postAuthor.photoUrl
+                    : "/assets/images/profile.png"
                 }
                 alt="user"
                 className="h-[50px] w-[50px] rounded-full"
@@ -59,7 +63,7 @@ function PostCard({ post }: { post: IPost }) {
             </Link>
             <div>
               <p className="text-[1.125rem] font-bold tracking-[-1px] text-light-200">
-                {user?.name}
+                {postAuthor?.name}
               </p>
               <small className="text-sm text-light-300">{dateString}</small>
             </div>
