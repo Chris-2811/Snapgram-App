@@ -112,7 +112,7 @@ function PostCard({ post }: { post: IPost }) {
             "/assets/icons/profile-placeholder.svg"
           }
           alt="post-image"
-          className="h-[295px] w-full object-cover lg:h-[520px]"
+          className="h-[295px] w-full object-cover sm:h-[520px]"
         />
       </div>
       <div className="mt-2 flex justify-center gap-2">
