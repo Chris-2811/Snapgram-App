@@ -31,13 +31,6 @@ function LeftSidebar() {
     }
   }
 
-  const encodeUsername = (username: string) =>
-    encodeURIComponent(username.toLowerCase());
-
-  const profileIdentifier = user?.username
-    ? encodeUsername(user?.username)
-    : user?.userId;
-
   return (
     <div className="sticky top-0 hidden h-screen max-h-[1024px] max-w-[270px] border border-red bg-dark-200 pb-8 text-light-100 md:flex md:flex-col md:justify-between md:px-4 md:pt-9 lg:min-w-[270px] lg:px-6 lg:pt-12">
       <div>
@@ -52,7 +45,7 @@ function LeftSidebar() {
           className="mx-auto lg:hidden"
         />
         <div className="my-11 flex items-center gap-3 md:justify-center lg:justify-start">
-          <Link to={`/profile/${profileIdentifier}`}>
+          <Link to={`/profile/${user.userId}`}>
             <Avatar className="">
               {user?.photoUrl ? (
                 <>
@@ -67,7 +60,7 @@ function LeftSidebar() {
             </Avatar>
           </Link>
           <div className="hidden lg:block">
-            <Link to={`/profile/${profileIdentifier}`}>
+            <Link to={`/profile/${user.userId}`}>
               <p className="text-lg font-bold tracking-[-1px] text-light-200">
                 {user?.name}
               </p>
