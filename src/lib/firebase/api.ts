@@ -148,8 +148,6 @@ export async function getPosts({ pageParam }: { pageParam: string | null }) {
     ...doc.data(),
   })) as IPost[];
 
-  console.log("fetchedPosts: ", posts);
-
   return posts;
 }
 
