@@ -60,3 +60,26 @@ export const useGetPostById = (postId: string) => {
     enabled: !!postId,
   });
 };
+
+export const useGetPostsById = (userId: string | undefined) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_POSTS_BY_ID, userId],
+    queryFn: ({ pageParam = null }) => getPostsById(userId, pageParam), // Pass pageParam to getPostsById
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage && lastPage.length < 10) {
+        return undefined; // Return undefined instead of null when there are
+      }
+
+      const lastId = lastPage[lastPage.length - 1]?.postId;
+
+      if (!lastId) {
+        console.error("Last post ID not found");
+        return undefined;
+      }
+
+      return lastId;
+    },
+    initialPageParam: null,
+    enabled: !!userId,
+  });
+};

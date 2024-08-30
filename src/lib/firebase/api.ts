@@ -18,6 +18,7 @@ import {
   collection,
   limit,
   getDocs,
+  where,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 
@@ -165,11 +166,64 @@ export async function getPostById(postId: string) {
   }
 }
 
+export async function getPostsById(
+  userId: string | undefined,
+  pageParam: string | null,
+) {
+  if (!userId) {
+    console.error("No user found");
+    throw new Error("No user found");
+  }
+
+  try {
+    let q;
+
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "posts", pageParam));
+
+      if (!lastDocSnapshot.exists()) {
+        throw new Error("Last document snapshot does not exist.");
+      }
+
+      q = query(
+        collection(db, "posts"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(10),
+      );
+    } else {
+      q = query(
+        collection(db, "posts"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        limit(10),
+      );
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return [];
+    }
+
+    const posts = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as IPost[];
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return []; // or handle this error according to your use case
+  }
+}
+
 // ====================
 // USERS
 // ====================
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string | undefined) {
+  if (!userId) throw Error;
   const docRef = doc(db, "users", userId);
   const docSnap = await getDoc(docRef);
 
