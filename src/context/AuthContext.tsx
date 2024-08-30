@@ -21,7 +21,6 @@ const INITIAL_STATE = {
   isLoading: false,
   setUser: () => {},
   setIsAuthenticated: () => {},
-  /* checkAuthUser: async () => false, */
 };
 
 interface IContext {
@@ -30,7 +29,6 @@ interface IContext {
   isLoading: boolean;
   setUser: React.Dispatch<React.SetStateAction<IUser>>;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  /* checkAuthUser: () => Promise<boolean>; */
 }
 
 export const AuthContext = createContext<IContext>(INITIAL_STATE);
