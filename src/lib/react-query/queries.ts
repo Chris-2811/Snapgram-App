@@ -1,11 +1,18 @@
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getUsers, getPosts, getUserById, getPostById } from "../firebase/api";
+import {
+  getUsers,
+  getPosts,
+  getUserById,
+  getPostById,
+  getPostsById,
+} from "../firebase/api";
 
-export const useGetUserById = (userId: string) => {
+export const useGetUserById = (userId: string | undefined) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
     queryFn: () => getUserById(userId),
+    enabled: !!userId,
   });
 };
 
