@@ -6,6 +6,7 @@ import {
   getUserById,
   getPostById,
   getPostsById,
+  getCommentsByPostId,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -88,5 +89,13 @@ export const useGetPostsById = (userId: string | undefined) => {
     },
     initialPageParam: null,
     enabled: !!userId,
+  });
+};
+
+export const useGetCommentsByPostId = (postId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_COMMENTS_BY_POST_ID, postId],
+    queryFn: () => getCommentsByPostId(postId),
+    enabled: !!postId,
   });
 };

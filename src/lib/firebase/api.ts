@@ -258,3 +258,34 @@ export async function getUsers({ pageParam }: { pageParam: string | null }) {
 
   return users;
 }
+
+// ====================
+// COMMENTS
+// ====================
+
+export async function getCommentsByPostId(postId: string) {
+  console.log("postId", postId);
+  if (!postId) throw Error;
+
+  try {
+    const q = query(
+      collection(db, "comments"),
+      where("postId", "==", postId),
+      orderBy("timestamp", "desc"),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot) throw new Error();
+
+    const comments = querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as Comment[]),
+    }));
+
+    console.log(comments);
+
+    return comments;
+  } catch (error) {
+    console.error("Error fetching comments", error);
+  }
+}
