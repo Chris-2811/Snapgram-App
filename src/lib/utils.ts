@@ -31,5 +31,10 @@ export function formatPostDate(createdAt: Timestamp | String) {
 
 export function getInitials(name: string) {
   const [firstName, lastName] = name.split(" ");
+
+  if (name.split(" ").length === 1) {
+    return name.charAt(0).toUpperCase();
+  }
+
   return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 }
