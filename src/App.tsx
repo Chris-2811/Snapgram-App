@@ -21,6 +21,7 @@ import AuthLayout from "./layout/AuthLayout";
 import { AuthContextProvider } from "./context/AuthContext";
 import { QueryProvider } from "./lib/react-query/QueryProvider";
 import { Toaster } from "./components/ui/toaster";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 function App() {
   const protectedRoutes = [
@@ -44,9 +45,11 @@ function App() {
         <Router>
           <Routes>
             <Route element={<MainLayout />}>
-              {protectedRoutes.map((item, index) => (
-                <Route key={index} path={item.path} element={item.element} />
-              ))}
+              <Route element={<ProtectedRoute />}>
+                {protectedRoutes.map((item, index) => (
+                  <Route key={index} path={item.path} element={item.element} />
+                ))}
+              </Route>
             </Route>
             <Route element={<AuthLayout />}>
               <Route path="/log-in" element={<LogIn />} />
