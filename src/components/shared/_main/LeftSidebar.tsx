@@ -8,10 +8,11 @@ import { AuthContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import Loader from "@/components/shared/Loader";
 
 function LeftSidebar() {
   const { pathname } = useLocation();
-  const { user } = useContext(AuthContext);
+  const { user, isLoading } = useContext(AuthContext);
 
   console.log(user);
 
@@ -45,31 +46,40 @@ function LeftSidebar() {
           className="mx-auto lg:hidden"
         />
         <div className="my-11 flex items-center gap-3 md:justify-center lg:justify-start">
-          <Link to={`/profile/${user.userId}`}>
-            <Avatar className="">
-              {user?.photoUrl ? (
-                <>
-                  <AvatarImage src="/assets/images/avatar.jpg" alt="avatar" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </>
-              ) : (
-                <div className="grid h-full w-full place-items-center bg-gray-200 text-lg text-black">
-                  {user?.name && getInitials(user?.name)}
-                </div>
-              )}
-            </Avatar>
-          </Link>
-          <div className="hidden lg:block">
-            <Link to={`/profile/${user.userId}`}>
-              <p className="text-lg font-bold tracking-[-1px] text-light-200">
-                {user?.name}
-              </p>
-            </Link>
-            <p className="text-sm text-light-300">
-              {" "}
-              {!user?.username ? `@${user?.name}` : `@${user?.username}`}
-            </p>
-          </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <Link to={`/profile/${user.userId}`}>
+                <Avatar className="">
+                  {user?.photoUrl ? (
+                    <>
+                      <AvatarImage
+                        src="/assets/images/avatar.jpg"
+                        alt="avatar"
+                      />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </>
+                  ) : (
+                    <div className="grid h-full w-full place-items-center bg-gray-200 text-lg text-black">
+                      {user?.name && getInitials(user?.name)}
+                    </div>
+                  )}
+                </Avatar>
+              </Link>
+              <div className="hidden lg:block">
+                <Link to={`/profile/${user.userId}`}>
+                  <p className="text-lg font-bold tracking-[-1px] text-light-200">
+                    {user?.name}
+                  </p>
+                </Link>
+                <p className="text-sm text-light-300">
+                  {" "}
+                  {!user?.username ? `@${user?.name}` : `@${user?.username}`}
+                </p>
+              </div>
+            </>
+          )}
         </div>
         <nav aria-label="primary-navigation">
           <ul role="list" className="gap-h1000 flex flex-col lg:gap-4">
