@@ -15,8 +15,8 @@ const buttonVariants = cva(
           "bg-red text-slate-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/90",
         auth: "bg-primary text-light-100 w-full rounded-lg",
         oAuth: "bg-light-100 text-dark-400 w-full rounded-lg",
-        secondary:
-          "bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
+        confirm:
+          "bg-[#296650] font-light text-md text-slate-50 hover:bg-[#3A7A68] ",
         ghost:
           "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
