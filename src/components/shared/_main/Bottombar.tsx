@@ -7,7 +7,7 @@ function Bottombar() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 rounded-t-[20px] bg-dark-400 md:hidden">
-      <div className="px-7 py-[0.875rem] md:px-10">
+      <div className="px-4 py-[0.875rem] md:px-10">
         <nav className="secondary-navigation">
           <ul className="flex items-center justify-between">
             {bottombarLinks.map((link, index) => {
