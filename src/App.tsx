@@ -14,6 +14,7 @@ import {
   SavedPosts,
   LogIn,
   SignUp,
+  VerifyEmail,
 } from "./pages";
 import MainLayout from "./layout/MainLayout";
 import AuthLayout from "./layout/AuthLayout";
@@ -50,6 +51,7 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route path="/log-in" element={<LogIn />} />
               <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
             </Route>
           </Routes>
         </Router>

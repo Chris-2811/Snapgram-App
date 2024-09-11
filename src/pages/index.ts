@@ -13,3 +13,4 @@ export { default as SavedPosts } from "./_main/SavedPosts";
 
 export { default as LogIn } from "./_auth/LogIn";
 export { default as SignUp } from "./_auth/SignUp";
+export { default as VerifyEmail } from "./_auth/VerifyEmail";
