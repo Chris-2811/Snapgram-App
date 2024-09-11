@@ -10,6 +10,8 @@ import { useCreateUserAccount } from "@/lib/react-query/mutations";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useNavigate } from "react-router-dom";
+import { sendEmailVerification } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase";
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -101,18 +103,23 @@ function SignUp() {
       const newUser = await createUserAccount({
         email: formData.email,
         password: formData.password,
+        name: formData.name,
       });
 
       if (!newUser) {
         throw Error;
       }
 
-      navigate("/");
+      if (newUser) {
+        await sendEmailVerification(auth.currentUser!);
+        navigate("/verify-email");
+      }
     } catch (error: any) {
       let errorMessage = "There was a problem creating your account.";
       if (error.code === "auth/email-already-in-use") {
         errorMessage = "This Email is already in use. Try another.";
       }
+
       toast({
         title: "Uh oh! Something went wrong.",
         variant: "destructive",

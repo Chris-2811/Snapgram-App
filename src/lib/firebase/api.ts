@@ -21,6 +21,7 @@ import {
   where,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
+import { send } from "process";
 
 // ====================
 // AUTH
@@ -38,18 +39,17 @@ export async function createUserAccount(user: INewUser) {
 
     const newUser = {
       email: user.email,
-      id: newAccount.user.uid,
+      userId: newAccount.user.uid,
       bio: "",
       photoUrl: "",
       username: "",
-      name: "",
+      name: user.name,
       createdAt: Timestamp.now(),
     };
 
     const userDocRef = doc(db, "users", newAccount.user.uid);
     await setDoc(userDocRef, newUser);
 
-    await sendEmailVerification(newAccount.user);
     return newUser;
   } catch (error) {
     console.error("Error creating user account", error);

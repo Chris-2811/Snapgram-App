@@ -11,6 +11,7 @@ export interface IUser {
 export interface INewUser {
   email: string;
   password: string;
+  name: string;
 }
 
 export interface IErrors {
