@@ -18,7 +18,7 @@ const INITIAL_USER = {
 const INITIAL_STATE = {
   user: INITIAL_USER,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
   setUser: () => {},
   setIsAuthenticated: () => {},
 };
@@ -40,7 +40,7 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState<IUser>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
