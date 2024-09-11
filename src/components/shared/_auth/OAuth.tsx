@@ -43,7 +43,7 @@ function OAuth() {
       };
 
       await saveUserToDB(newUser);
-      await sendEmailVerification(user);
+
       navigate("/");
     } catch (error) {
       toast({
