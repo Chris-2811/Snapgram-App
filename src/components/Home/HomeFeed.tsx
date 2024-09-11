@@ -29,11 +29,19 @@ function Home() {
           <Filter />
         </div>
       </div>
+
       <div className="md:flex md:w-full md:flex-col lg:items-start">
         <div className="max-w-[600px]">
           <div>
             {isPostLoading && !posts ? (
-              <h1 className="bg-red">Loading...</h1>
+              <div className="absolute bottom-0 left-0 right-0 top-0 z-10 grid place-items-center bg-dark-200">
+                <img
+                  src="/assets/images/logo.svg"
+                  alt=""
+                  width={200}
+                  height={200}
+                />
+              </div>
             ) : (
               posts && (
                 <ul role="list" className="mt-10 flex flex-col gap-10">
