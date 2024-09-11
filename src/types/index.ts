@@ -33,3 +33,10 @@ export interface IPost {
   tags: string[];
   userId: string;
 }
+
+export interface IComment {
+  commentId: string;
+  postId: string;
+  text: string;
+  userId: string;
+}
