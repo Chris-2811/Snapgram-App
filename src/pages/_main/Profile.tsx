@@ -28,8 +28,8 @@ function Profile() {
   const allPosts = posts?.pages.flatMap((page) => page.map((post) => post));
 
   return (
-    <div className="flex-1 px-[3.75rem] pt-20">
-      <div className="flex gap-[1.875rem]">
+    <div className="flex-1 px-4 pt-20 sm:px-7 lg:px-[3.75rem]">
+      <div className="flex gap-7 lg:gap-[1.875rem]">
         <img
           src={
             userData?.photoUrl
@@ -37,11 +37,18 @@ function Profile() {
               : "/assets/icons/profile-placeholder.svg"
           }
           alt="profile-picture"
-          className="h-[150px] w-[150px] rounded-full"
+          className="h-[80px] w-[80px] rounded-full lg:h-[150px] lg:w-[150px]"
         />
         <div>
-          <div className="flex gap-10">
-            <h1 className="heading-lg">{userData?.name}</h1>
+          <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
+            <div>
+              <h1 className="heading-sm lg:heading-lg mb-1">
+                {userData?.name}
+              </h1>
+              {userData?.username && (
+                <div className="text-light-400">@{userData?.username}</div>
+              )}
+            </div>
             {isCurrentUser ? (
               <Link
                 to={`/edit-profile/${user?.userId}`}
@@ -59,7 +66,6 @@ function Profile() {
               </div>
             )}
           </div>
-          <div className="text-light-400">@{userData?.username}</div>
           <div className="mt-[1.375rem] flex items-center gap-10">
             <div className={`${!isCurrentUser && "flex items-center gap-2"}`}>
               <div className="text-xl font-medium tracking-[-1px] text-primary">
