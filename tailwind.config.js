@@ -30,6 +30,8 @@ module.exports = {
         xs: "480px",
         "2xl": "1400px",
         "3xl": "1560px",
+        "4xl": "1920px",
+        "5xl": "2400px",
       },
       colors: {
         primary: "hsl(244, 100%, 75%)",
@@ -55,6 +57,7 @@ module.exports = {
         "gradient-border":
           "linear-gradient(180deg, #877EFF, #685DFF 46.1458%, #3121FF)",
       },
+
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
