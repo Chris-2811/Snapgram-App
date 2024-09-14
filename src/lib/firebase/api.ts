@@ -124,31 +124,50 @@ export async function logOutUser() {
 // POSTS
 // ====================
 
-export async function getPosts({ pageParam }: { pageParam: string | null }) {
-  let q;
+export async function getPosts({
+  pageParam,
+  postLimit,
+}: {
+  pageParam: string | null;
+  postLimit: number;
+}) {
+  try {
+    let q;
 
-  if (pageParam) {
-    const lastDocSnapshot = await getDoc(doc(db, "posts", pageParam));
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "posts", pageParam));
 
-    q = query(
-      collection(db, "posts"),
-      orderBy("createdAt", "desc"),
-      startAfter(lastDocSnapshot),
-      limit(10),
-    );
-  } else {
-    q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(10));
+      q = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(postLimit),
+      );
+    } else {
+      q = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc"),
+        limit(postLimit),
+      );
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    console.log("querySnapshot", querySnapshot);
+
+    if (!querySnapshot) throw new Error();
+
+    const posts = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as IPost[];
+
+    console.log("posts", posts);
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw new Error("Failed to fetch posts");
   }
-
-  const querySnapshot = await getDocs(q);
-
-  if (!querySnapshot) throw new Error();
-
-  const posts = querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-  })) as IPost[];
-
-  return posts;
 }
 
 export async function getPostById(postId: string) {

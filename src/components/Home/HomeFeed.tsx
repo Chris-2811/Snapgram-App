@@ -10,7 +10,7 @@ function Home() {
     isPending: isPostLoading,
     fetchNextPage,
     hasNextPage,
-  } = useGetPosts();
+  } = useGetPosts(10);
 
   const { ref, inView } = useInView();
 

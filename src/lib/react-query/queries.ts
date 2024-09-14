@@ -39,22 +39,16 @@ export const useGetUsers = () => {
   });
 };
 
-export const useGetPosts = () => {
+export const useGetPosts = (postLimit: number) => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_POSTS, null],
-    queryFn: ({ pageParam = null }) => getPosts({ pageParam }), // Pass pageParam to getPosts
+    queryFn: ({ pageParam = null }) => getPosts({ pageParam, postLimit }), // Pass pageParam to getPosts
     getNextPageParam: (lastPage: any) => {
-      if (lastPage.length < 10) {
+      if (lastPage.length < postLimit) {
         return undefined; // Return undefined instead of null when there are
       }
 
       const lastId = lastPage[lastPage.length - 1]?.postId;
-
-      if (!lastId) {
-        console.error("Last post ID not found");
-        return undefined;
-      }
-
       return lastId;
     },
     initialPageParam: null,
