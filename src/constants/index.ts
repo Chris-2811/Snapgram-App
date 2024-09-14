@@ -58,3 +58,16 @@ export const bottombarLinks = [
     label: "Create",
   },
 ];
+
+export const exploreHashtags = [
+  "technology",
+  "mountains",
+  "beach",
+  "food",
+  "nature",
+  "travel",
+  "photography",
+  "art",
+  "music",
+  "fashion",
+];
