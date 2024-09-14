@@ -2,17 +2,13 @@ import React from "react";
 import { useState } from "react";
 import { useGetUserById } from "@/lib/react-query/queries";
 import PostStats from "./PostStats";
-/* import PostDetails from "./PostDetails"; */
+import PostDetails from "./PostDetails";
+import { IPost } from "@/types";
 
-function PostList({ posts }) {
+function PostList({ posts }: { posts: IPost[] }) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [currentPost, setCurrentPost] = useState(null);
-  const {
-    data: creator,
-    isLoading,
-    isFetched,
-    isError,
-  } = useGetUserById(currentPost?.userId);
+  const [currentPost, setCurrentPost] = useState<IPost | null>(null);
+  const { data: creator, isLoading } = useGetUserById(currentPost?.userId);
 
   function handleClick(post: any) {
     setShowModal(!showModal);
@@ -26,34 +22,35 @@ function PostList({ posts }) {
 
   return (
     <div>
-      <ul role="list" className="flex flex-wrap gap-5">
-        {posts.map((post) => (
-          <div>
-            <li
-              onClick={() => handleClick(post)}
-              className="h-[357px] cursor-pointer overflow-hidden rounded-[16px]"
-            >
-              {post?.photoUrls ? (
-                <img
-                  src={post.photoUrls[0]}
-                  alt=""
-                  width={340}
-                  className="h-full"
-                />
-              ) : (
-                <video></video>
-              )}
-            </li>
-          </div>
+      <ul
+        role="list"
+        className="grid grid-cols-3 place-content-start gap-0.5 lg:gap-1 3xl:grid-cols-4"
+      >
+        {posts.map((post, index) => (
+          <li
+            key={index}
+            onClick={() => handleClick(post)}
+            className="max-h-[357px] max-w-[340px] lg:cursor-pointer"
+          >
+            {post?.photoUrls ? (
+              <img
+                src={`${post.photoUrls[0]}&w=400&fit=max`}
+                alt=""
+                className="lg:aspect-none aspect-square h-full w-full"
+              />
+            ) : (
+              <video></video>
+            )}
+          </li>
         ))}
       </ul>
       {showModal && !isLoading && (
         <>
-          {/*   <PostDetails
+          <PostDetails
             handleCloseModal={handleCloseModal}
             currentPost={currentPost}
             creator={creator}
-          /> */}
+          />
         </>
       )}
     </div>
