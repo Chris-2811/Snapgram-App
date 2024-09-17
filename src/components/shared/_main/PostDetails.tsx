@@ -78,8 +78,6 @@ function PostDetails({
 
   const captionPreview = `${currentPost.caption.slice(0, 100)}...`;
 
-  console.log(imageUrls);
-
   const filteredTags =
     currentPost.tags.length > 3
       ? currentPost.tags.filter((_, index) => (index + 1) % 3 === 0)
@@ -133,18 +131,20 @@ function PostDetails({
                   </small>
                 </div>
               </div>
-              <div className="flex gap-3">
-                <img
-                  src="/assets/icons/edit.svg"
-                  alt="edit"
-                  className="w-5 cursor-pointer"
-                />
-                <img
-                  src="/assets/icons/delete.svg"
-                  alt="delete"
-                  className="w-5 cursor-pointer"
-                />
-              </div>
+              {user.userId === currentPost.userId && (
+                <div className="flex gap-3">
+                  <img
+                    src="/assets/icons/edit.svg"
+                    alt="edit"
+                    className="w-5 cursor-pointer"
+                  />
+                  <img
+                    src="/assets/icons/delete.svg"
+                    alt="delete"
+                    className="w-5 cursor-pointer"
+                  />
+                </div>
+              )}
             </div>
             <div className="mt-5">
               <div>
