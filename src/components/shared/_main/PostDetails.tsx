@@ -76,7 +76,10 @@ function PostDetails({
     trackMouse: true,
   });
 
-  const captionPreview = `${currentPost.caption.slice(0, 100)}...`;
+  const captionPreview =
+    currentPost.caption.length > 60
+      ? `${currentPost.caption.slice(0, 60)}...`
+      : currentPost.caption;
 
   const filteredTags =
     currentPost.tags.length > 3
@@ -150,17 +153,19 @@ function PostDetails({
               <div>
                 <div className="max-w-lg font-semibold">
                   {isCaptionExpened ? currentPost.caption : captionPreview}
-                  <span
-                    onClick={() => setIsCaptionExpended(!isCaptionExpened)}
-                    className="ml-2 cursor-pointer whitespace-nowrap text-xs text-light-300"
-                  >
-                    {isCaptionExpened ? "show less" : "show more"}
-                  </span>
+                  {currentPost.caption.length > 60 && (
+                    <span
+                      onClick={() => setIsCaptionExpended(!isCaptionExpened)}
+                      className="ml-2 cursor-pointer whitespace-nowrap text-xs text-light-300"
+                    >
+                      {isCaptionExpened ? "show less" : "show more"}
+                    </span>
+                  )}
                 </div>
 
                 <span
                   className={`flex gap-2 text-light-400 ${
-                    currentPost.caption.length > 50 && "mt-2"
+                    currentPost.caption.length > 60 && "mt-2"
                   }`}
                 >
                   {filteredTags.map((tag: string, index: number) => (
