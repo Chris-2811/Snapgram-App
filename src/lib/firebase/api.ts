@@ -1,4 +1,4 @@
-import { INewUser, IPost, IUser } from "@/types";
+import { INewUser, IPost, IUser, IComment } from "@/types";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -298,7 +298,7 @@ export async function getCommentsByPostId(postId: string) {
     if (!querySnapshot) throw new Error();
 
     const comments = querySnapshot.docs.map((doc) => ({
-      ...(doc.data() as Comment[]),
+      ...(doc.data() as IComment),
     }));
 
     console.log(comments);
