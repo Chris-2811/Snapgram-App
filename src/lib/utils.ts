@@ -38,3 +38,14 @@ export function getInitials(name: string) {
 
   return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 }
+
+export const replaceImageFormat = (url: string, newFormat = "webp") => {
+  // Create a URL object to handle query parameters
+  const urlObj = new URL(url);
+
+  // Set the new format (replaces if 'fm' already exists)
+  urlObj.searchParams.set("fm", newFormat);
+
+  // Return the modified URL as a string
+  return urlObj.toString();
+};
