@@ -10,6 +10,7 @@ import { useQueries } from "@tanstack/react-query";
 import { AuthContext } from "@/context/AuthContext";
 import { IPost } from "@/types";
 import { useSwipeable } from "react-swipeable";
+import PostStats from "./PostStats";
 
 interface PostDetailsProps {
   handleCloseModal: (e: React.MouseEvent) => void;
@@ -229,6 +230,7 @@ function PostDetails({
                 ))}
               </div>
               <div className="">
+                <PostStats post={currentPost} comments={comments} />
                 <form
                   onSubmit={handleSubmit}
                   className="mt-10 flex items-center gap-4"
