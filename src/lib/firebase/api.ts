@@ -19,9 +19,10 @@ import {
   limit,
   getDocs,
   where,
+  addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
-import { send } from "process";
 
 // ====================
 // AUTH
@@ -232,6 +233,69 @@ export async function getPostsById(
   } catch (error) {
     console.error("Error fetching posts:", error);
     return []; // or handle this error according to your use case
+  }
+}
+
+export async function savePost(post: IPost) {
+  try {
+    const colRef = collection(db, "savedPosts");
+    const savedPost = await addDoc(colRef, {
+      userId: post.userId,
+      postId: post.postId,
+    });
+
+    if (!savedPost) throw Error;
+
+    console.log("Post saved successfully");
+
+    return savedPost;
+  } catch (error) {
+    console.error("Error saving post", error);
+  }
+}
+
+export async function deleteSavedPost(userId: string, postId: string) {
+  try {
+    const q = query(
+      collection(db, "savedPosts"),
+      where("userId", "==", userId),
+      where("postId", "==", postId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      throw new Error("No saved post found");
+    }
+
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+
+    console.log("Post deleted successfully");
+  } catch (error) {
+    console.error("Error deleting post", error);
+  }
+}
+
+export async function isPostSavedByUser(userId: string, postId: string) {
+  try {
+    const q = query(
+      collection(db, "savedPosts"),
+      where("userId", "==", userId),
+      where("postId", "==", postId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error checking if post is saved", error);
+    return false;
   }
 }
 
