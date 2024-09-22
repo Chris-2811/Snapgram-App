@@ -7,6 +7,7 @@ import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
 import { IPost } from "@/types";
 import { AuthContext } from "@/context/AuthContext";
+import PostStats from "../shared/_main/PostStats";
 
 function PostCard({ post }: { post: IPost }) {
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
@@ -46,7 +47,7 @@ function PostCard({ post }: { post: IPost }) {
   });
 
   return (
-    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 pb-8 pt-[1.375rem] md:px-7 lg:pb-[7.75rem] lg:pt-9">
+    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 pb-8 pt-[1.375rem] md:px-7 lg:pb-9 lg:pt-9">
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3">
@@ -129,6 +130,9 @@ function PostCard({ post }: { post: IPost }) {
             ></div>
           ))}
       </div>
+      <div className="mt-[1.875rem]">
+        <PostStats post={post} />
+      </div>
       <form className="mt-10 flex items-center gap-4">
         <img
           src="/assets/images/profile.png"
@@ -137,7 +141,7 @@ function PostCard({ post }: { post: IPost }) {
         />
         <div className="form-control relative w-full">
           <Input
-            className="mt-0 h-11 bg-dark-400 placeholder:text-light-400"
+            className="mt-0 h-11 bg-dark-400 ring-0 placeholder:text-light-400 focus:ring-0"
             placeholder="Write your comment..."
           />
           <button className="absolute right-4 top-1/2 -translate-y-1/2">
