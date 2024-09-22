@@ -32,7 +32,7 @@ function PostDetails({
     currentPost.postId,
   );
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
-  const recentComments = comments?.slice(0, 3);
+  const recentComments = comments; /* ?.slice(0, 3); */
   console.log("recentComments", recentComments);
   const userQueries = useQueries({
     queries:
@@ -58,6 +58,7 @@ function PostDetails({
       });
 
       setText("");
+      refetchComments();
     } catch (error) {
       console.log(error);
     }
@@ -176,64 +177,65 @@ function PostDetails({
               </div>
             </div>
 
-            {/* Comments */}
             <div className="flex flex-1 flex-col justify-between">
-              <div className="mt-[1.875rem] space-y-[1.875rem] border-t border-t-dark-400 lg:pt-[1.75rem]">
-                {recentComments?.map((item, index) => (
-                  <div className="flex items-start justify-between">
+              {/* Comments */}
+              <div className="mt-[1.875rem] border-t border-t-dark-400 lg:pt-[1.75rem]">
+                <div className="scrollbar-custom h-[195px] space-y-[1.875rem] overflow-y-auto pr-2">
+                  {recentComments?.map((item, index) => (
                     <div className="flex gap-2">
-                      <img
-                        src={
-                          userQueries[index].data?.photoUrl
-                            ? userQueries[index].data?.photoUrl
-                            : "/assets/images/profile.png"
-                        }
-                        alt="avatar"
-                        width={36}
-                        className="h-[36px] rounded-full"
-                      />
-                      <div className="">
-                        <div className="flex items-center gap-[0.625rem]">
-                          <p className="text-xs font-medium lg:max-w-[376px]">
-                            <h3 className="mr-3 inline text-sm font-semibold tracking-[-1px] text-light-300">
+                      <div>
+                        <img
+                          src={
+                            userQueries[index].data?.photoUrl
+                              ? userQueries[index].data?.photoUrl
+                              : "/assets/images/profile.png"
+                          }
+                          alt="avatar"
+                          width={36}
+                          className="h-[36px] rounded-full"
+                        />
+                      </div>
+
+                      <div className="flex flex-1 items-start justify-between">
+                        <div className="flex flex-col">
+                          <div className="w-full max-w-[361px] break-words text-sm font-normal">
+                            <span className="mr-2 text-nowrap text-sm font-semibold text-light-300">
                               {userQueries[index].data?.username
                                 ? userQueries[index].data?.username
                                 : userQueries[index].data?.name}
-                            </h3>
+                            </span>
                             {item.text}
-                          </p>
+                          </div>
+                          <div className="mt-0.5">
+                            <div className="flex items-center text-xs">
+                              <p className="mr-3 text-light-300">1d</p>
+                              <img
+                                src="/assets/icons/reply.svg"
+                                alt="reply-icon"
+                                className="mr-1"
+                              />
+                              <p>Reply</p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="mt-1 flex items-center gap-[0.6875rem]">
-                          <div className="text-[0.625rem] text-light-300">
-                            1d
-                          </div>
-                          <div className="flex items-center gap-[0.1875rem]">
-                            <img
-                              src="/assets/icons/reply.svg"
-                              alt="like-comment"
-                              width={16}
-                            />
-                            <p className="text-[10px]">Reply</p>
-                          </div>
+                        <div className="flex items-center gap-1">
+                          <img
+                            src="/assets/icons/like.svg"
+                            alt="like-icon"
+                            className="w-4"
+                          />
+                          <p className="text-sm text-light-300">4 likes</p>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <img
-                        src="/assets/icons/like.svg"
-                        alt="like-post"
-                        width={16}
-                      />
-                      <p className="text-[10px] text-light-300">4 likes</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
               <div className="">
                 <PostStats post={currentPost} comments={comments} />
                 <form
                   onSubmit={handleSubmit}
-                  className="mt-10 flex items-center gap-4"
+                  className="mt-[1.875rem] flex items-center gap-4"
                 >
                   <img
                     src="/assets/images/profile.png"

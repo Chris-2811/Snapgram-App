@@ -123,4 +123,17 @@
   .invert-white {
     @apply brightness-0 invert transition;
   }
+
+  .scrollbar-custom {
+    scrollbar-width: thin; /* Width of the scrollbar */
+    scrollbar-color: hsl(240, 14%, 42%) transparent; /* Color of the scrollbar thumb and track */
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: hsl(240, 14%, 42%); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded edges for the thumb */
+    height: 12px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 }
