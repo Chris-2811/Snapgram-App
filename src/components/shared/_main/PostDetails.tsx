@@ -11,6 +11,8 @@ import { AuthContext } from "@/context/AuthContext";
 import { IPost } from "@/types";
 import { useSwipeable } from "react-swipeable";
 import PostStats from "./PostStats";
+import { MAX_COMMENT_LENGTH } from "@/constants";
+import { set } from "date-fns";
 
 interface PostDetailsProps {
   handleCloseModal: (e: React.MouseEvent) => void;
@@ -31,6 +33,7 @@ function PostDetails({
   const { data: comments, refetch: refetchComments } = useGetCommentsByPostId(
     currentPost.postId,
   );
+  const [isCommentTooLong, setIsCommentTooLong] = useState<boolean>(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
   const recentComments = comments; /* ?.slice(0, 3); */
   console.log("recentComments", recentComments);
@@ -46,6 +49,15 @@ function PostDetails({
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (text.length > MAX_COMMENT_LENGTH) {
+      setIsCommentTooLong(true);
+      return;
+    }
+
+    if (text.length === 0) {
+      return;
+    }
 
     const colRef = collection(db, "comments");
 
@@ -66,6 +78,9 @@ function PostDetails({
 
   function handleTextChange(e: ChangeEvent<HTMLInputElement>) {
     setText(e.target.value);
+    if (e.target.value.length === 0) {
+      setIsCommentTooLong(false);
+    }
   }
 
   const swipeHandlers = useSwipeable({
@@ -244,7 +259,7 @@ function PostDetails({
                   />
                   <div className="form-control relative w-full">
                     <Input
-                      className="mt-0 h-11 bg-dark-400 placeholder:text-light-400"
+                      className="mt-0 h-11 bg-dark-400 pr-14 ring-0 placeholder:text-light-400 focus:ring-0"
                       placeholder="Write your comment..."
                       onChange={handleTextChange}
                       value={text}
@@ -252,6 +267,11 @@ function PostDetails({
                     <button className="absolute right-4 top-1/2 -translate-y-1/2">
                       <img src="/assets/icons/plain.svg" alt="" className="" />
                     </button>
+                    {isCommentTooLong && (
+                      <small className="absolute -bottom-6 right-1 text-red">
+                        Maximum 150 characters
+                      </small>
+                    )}
                   </div>
                 </form>
               </div>

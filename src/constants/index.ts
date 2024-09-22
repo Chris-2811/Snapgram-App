@@ -71,3 +71,5 @@ export const exploreHashtags = [
   "music",
   "fashion",
 ];
+
+export const MAX_COMMENT_LENGTH = 150;
