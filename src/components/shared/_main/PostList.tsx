@@ -25,7 +25,7 @@ function PostList({ posts }: { posts: IPost[] }) {
     <div>
       <ul
         role="list"
-        className="grid grid-cols-3 place-content-start gap-0.5 lg:gap-1 3xl:grid-cols-4"
+        className="grid max-w-max grid-cols-3 place-content-start gap-0.5 lg:gap-1 3xl:grid-cols-4"
       >
         {posts.map((post, index) => (
           <li
