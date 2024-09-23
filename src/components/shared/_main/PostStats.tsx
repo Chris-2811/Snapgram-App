@@ -36,10 +36,10 @@ function PostStats({ post, comments }: { post: any; comments: any }) {
     e.stopPropagation();
     if (isSaved) {
       setIsSaved(false);
-      deleteSavedPost(post.userId, post.postId);
+      deleteSavedPost(post.postId, user.userId);
     } else {
       setIsSaved(true);
-      savePost(post);
+      savePost({ postId: post.postId, userId: user.userId });
     }
   }
 
