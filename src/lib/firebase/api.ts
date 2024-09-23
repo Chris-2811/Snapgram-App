@@ -236,12 +236,12 @@ export async function getPostsById(
   }
 }
 
-export async function savePost(post: IPost) {
+export async function savePost(postId: string, userId: string) {
   try {
     const colRef = collection(db, "savedPosts");
     const savedPost = await addDoc(colRef, {
-      userId: post.userId,
-      postId: post.postId,
+      userId: userId,
+      postId: postId,
     });
 
     if (!savedPost) throw Error;
