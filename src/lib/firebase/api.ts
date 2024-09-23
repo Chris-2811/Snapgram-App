@@ -162,8 +162,6 @@ export async function getPosts({
       ...doc.data(),
     })) as IPost[];
 
-    console.log("posts", posts);
-
     return posts;
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -296,6 +294,49 @@ export async function isPostSavedByUser(userId: string, postId: string) {
   } catch (error) {
     console.error("Error checking if post is saved", error);
     return false;
+  }
+}
+
+export async function getSavedPosts(userId: string) {
+  try {
+    const q = query(
+      collection(db, "savedPosts"),
+      where("userId", "==", userId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return [];
+    }
+
+    const savedPosts = querySnapshot.docs.map((doc) => doc.data().postId);
+
+    console.log(savedPosts);
+
+    const allSavedPosts = await getPostsByPostIds(savedPosts);
+
+    return allSavedPosts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPostsByPostIds(postIds: string[]) {
+  try {
+    const colRef = collection(db, "posts");
+    const posts: IPost[] = [];
+
+    for (const postId of postIds) {
+      const post = await getDoc(doc(colRef, postId));
+      if (post.exists()) {
+        posts.push(post.data() as IPost);
+      }
+    }
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts by user ids", error);
   }
 }
 
