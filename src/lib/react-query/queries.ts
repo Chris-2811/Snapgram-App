@@ -7,6 +7,7 @@ import {
   getPostById,
   getPostsById,
   getCommentsByPostId,
+  getSavedPosts,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -91,5 +92,13 @@ export const useGetCommentsByPostId = (postId: string) => {
     queryKey: [QUERY_KEYS.GET_COMMENTS_BY_POST_ID, postId],
     queryFn: () => getCommentsByPostId(postId),
     enabled: !!postId,
+  });
+};
+
+export const useGetSavedPosts = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_POSTS, userId],
+    queryFn: () => getSavedPosts(userId),
+    enabled: !!userId,
   });
 };
