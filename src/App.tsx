@@ -36,7 +36,7 @@ function App() {
     { path: "/edit-profile/:id", element: <EditProfile /> },
     { path: "/stories", element: <Stories /> },
     { path: "/reels", element: <Reels /> },
-    { path: "/saved-posts", element: <SavedPosts /> },
+    { path: "/saved", element: <SavedPosts /> },
   ];
 
   return (
