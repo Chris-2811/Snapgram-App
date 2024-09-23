@@ -16,7 +16,7 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/assets/icons/bookmark.svg",
-    route: "/saved-posts",
+    route: "/saved",
     label: "Saved",
   },
   {
@@ -49,7 +49,7 @@ export const bottombarLinks = [
   },
   {
     imgURL: "/assets/icons/bookmark.svg",
-    route: "/saved-posts",
+    route: "/saved",
     label: "Saved",
   },
   {
