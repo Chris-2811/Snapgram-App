@@ -96,9 +96,24 @@ export const useGetCommentsByPostId = (postId: string) => {
 };
 
 export const useGetSavedPosts = (userId: string) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_SAVED_POSTS, userId],
-    queryFn: () => getSavedPosts(userId),
+    queryFn: ({ pageParam = null }) => getSavedPosts({ userId, pageParam }),
     enabled: !!userId,
+    initialPageParam: null,
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage.length < 18) {
+        return undefined;
+      }
+
+      const lastId = lastPage[lastPage.length - 1]?.postId;
+
+      if (!lastId) {
+        console.error("Last post ID not found");
+        return undefined;
+      }
+
+      return lastId;
+    },
   });
 };
