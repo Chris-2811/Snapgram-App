@@ -21,8 +21,10 @@ import {
   where,
   addDoc,
   deleteDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
+import { create } from "domain";
 
 // ====================
 // AUTH
@@ -236,17 +238,13 @@ export async function getPostsById(
 
 export async function savePost(postId: string, userId: string) {
   try {
-    const colRef = collection(db, "savedPosts");
-    const savedPost = await addDoc(colRef, {
+    await setDoc(doc(db, "savedPosts", postId), {
       userId: userId,
       postId: postId,
+      createdAt: serverTimestamp(),
     });
 
-    if (!savedPost) throw Error;
-
     console.log("Post saved successfully");
-
-    return savedPost;
   } catch (error) {
     console.error("Error saving post", error);
   }
@@ -297,28 +295,58 @@ export async function isPostSavedByUser(userId: string, postId: string) {
   }
 }
 
-export async function getSavedPosts(userId: string) {
+export async function getSavedPosts({
+  userId,
+  pageParam,
+}: {
+  userId: string;
+  pageParam: string | null;
+}) {
+  console.log("userId", userId);
   try {
-    const q = query(
-      collection(db, "savedPosts"),
-      where("userId", "==", userId),
-    );
+    let q;
+
+    console.log("pageParam", pageParam);
+
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "savedPosts", pageParam));
+
+      q = query(
+        collection(db, "savedPosts"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(18),
+      );
+    } else {
+      q = query(
+        collection(db, "savedPosts"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        limit(18),
+      );
+    }
 
     const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
-      return [];
-    }
+    console.log(querySnapshot);
+
+    console.log("querySnapshot", querySnapshot);
+
+    if (!querySnapshot) throw new Error();
+
+    console.log("querySnapshot", querySnapshot.docs);
 
     const savedPosts = querySnapshot.docs.map((doc) => doc.data().postId);
 
-    console.log(savedPosts);
+    console.log("savedPosts", savedPosts);
 
     const allSavedPosts = await getPostsByPostIds(savedPosts);
 
     return allSavedPosts;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching saved posts", error);
+    return [];
   }
 }
 
@@ -337,6 +365,7 @@ export async function getPostsByPostIds(postIds: string[]) {
     return posts;
   } catch (error) {
     console.error("Error fetching posts by user ids", error);
+    return [];
   }
 }
 
