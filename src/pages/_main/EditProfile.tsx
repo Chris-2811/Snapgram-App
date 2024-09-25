@@ -1,5 +1,5 @@
 import { useGetUserById } from "@/lib/react-query/queries";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
 import { storage } from "@/lib/firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/context/AuthContext";
 
 function EditProfile() {
   const params = useParams();
@@ -17,7 +18,8 @@ function EditProfile() {
     return;
   }
 
-  const { data: user } = useGetUserById(params.id);
+  const { data: userData } = useGetUserById(params.id);
+  const { user, setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -28,12 +30,12 @@ function EditProfile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       setFormData({
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        bio: user.bio,
+        name: userData.name,
+        username: userData.username,
+        email: userData.email,
+        bio: userData.bio,
       });
     }
   }, [user]);
@@ -54,6 +56,17 @@ function EditProfile() {
         const docRef = doc(db, "users", params.id);
 
         await setDoc(docRef, { photoUrl: downloadUrl }, { merge: true });
+
+        setUser({
+          ...user,
+          ...formData,
+          photoUrl: downloadUrl,
+        });
+      } else {
+        setUser({
+          ...user,
+          ...formData,
+        });
       }
     }
 
