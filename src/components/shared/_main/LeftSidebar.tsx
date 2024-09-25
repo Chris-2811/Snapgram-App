@@ -54,10 +54,7 @@ function LeftSidebar() {
                 <Avatar className="">
                   {user?.photoUrl ? (
                     <>
-                      <AvatarImage
-                        src="/assets/images/avatar.jpg"
-                        alt="avatar"
-                      />
+                      <AvatarImage src={user?.photoUrl} alt="avatar" />
                       <AvatarFallback>JD</AvatarFallback>
                     </>
                   ) : (
