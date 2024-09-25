@@ -13,6 +13,8 @@ import { auth } from "@/lib/firebase/firebase";
 import { useSaveUserToDB } from "@/lib/react-query/mutations";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebase";
 
 function OAuth() {
   const { pathname } = useLocation();
@@ -41,6 +43,13 @@ function OAuth() {
         name: user.displayName,
         createdAt: Timestamp.now(),
       };
+
+      const userInDatabase = await getDoc(doc(db, "users", newUser.userId));
+
+      if (userInDatabase.exists()) {
+        navigate("/");
+        return;
+      }
 
       await saveUserToDB(newUser);
 
