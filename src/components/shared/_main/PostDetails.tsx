@@ -12,7 +12,7 @@ import { IPost } from "@/types";
 import { useSwipeable } from "react-swipeable";
 import PostStats from "./PostStats";
 import { MAX_COMMENT_LENGTH } from "@/constants";
-import { set } from "date-fns";
+import { Link } from "react-router-dom";
 
 interface PostDetailsProps {
   handleCloseModal: (e: React.MouseEvent) => void;
@@ -133,19 +133,23 @@ function PostDetails({
           <div className="flex w-[55%] flex-col rounded-r-[30px] bg-dark-200 px-7 pb-[1.875rem] pt-9 xl:w-[600px]">
             <div className="flex w-full justify-between">
               <div className="flex items-center gap-3">
-                <img
-                  src={`${
-                    creator.photoUrl
-                      ? creator.photoUrl
-                      : "/assets/images/profile.png"
-                  }`}
-                  alt="profile picture"
-                  className="h-[50px] w-[50px] rounded-full"
-                />
+                <Link to={`/profile/${creator.userId}`}>
+                  <img
+                    src={`${
+                      creator.photoUrl
+                        ? creator.photoUrl
+                        : "/assets/images/profile.png"
+                    }`}
+                    alt="profile picture"
+                    className="h-[50px] w-[50px] rounded-full"
+                  />
+                </Link>
                 <div>
-                  <p className="text-[1.125rem] font-bold tracking-[-1px] text-light-200">
-                    {creator.name}
-                  </p>
+                  <Link to={`/profile/${creator.userId}`}>
+                    <p className="text-[1.125rem] font-bold tracking-[-1px] text-light-200">
+                      {creator.name}
+                    </p>
+                  </Link>
                   <small className="text-sm text-light-300">
                     @Lewishamilton
                   </small>
@@ -253,9 +257,9 @@ function PostDetails({
                   className="mt-[1.875rem] flex items-center gap-4"
                 >
                   <img
-                    src="/assets/images/profile.png"
+                    src={`${user?.photoUrl ? user?.photoUrl : "/assets/images/profile.png"}`}
                     alt="profile picture"
-                    className="h-10 w-10"
+                    className="h-10 w-10 rounded-full"
                   />
                   <div className="form-control relative w-full">
                     <Input
