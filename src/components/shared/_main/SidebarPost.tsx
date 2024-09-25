@@ -3,6 +3,7 @@ import React from "react";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { getInitials } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 function SidebarPost() {
   const { user } = useContext(AuthContext);
@@ -10,18 +11,19 @@ function SidebarPost() {
   return (
     <div className="hidden h-screen border border-green-500 lg:px-11 lg:pt-20 2xl:block 2xl:w-[420px]">
       <div className="flex flex-col items-center">
-        {user.photoUrl ? (
+        <Link to={`/profile/${user.userId}`}>
           <Avatar>
-            <AvatarImage src={user.photoUrl} />
-            <AvatarFallback>{user.name}</AvatarFallback>
+            <AvatarImage
+              src={user.photoUrl}
+              className="h-[130px] w-[130px] rounded-full"
+            />
+            <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
           </Avatar>
-        ) : (
-          <div className="grid place-items-center rounded-full bg-gray-200 text-2xl text-black lg:h-[130px] lg:w-[130px]">
-            {user?.name && getInitials(user?.name)}
-          </div>
-        )}
-        <h3 className="heading-md mt-6">{user?.name}</h3>
-        <p>{user?.username}</p>
+        </Link>
+        <Link to={`/profile/${user.userId}`}>
+          <h3 className="heading-sm mt-6">{user?.name}</h3>
+        </Link>
+        <p className="mt-1 text-base text-light-300">{user?.username}</p>
       </div>
       <div className="mt-[3.5rem]">
         <h3 className="heading-sm">Top posts by you</h3>

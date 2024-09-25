@@ -135,9 +135,9 @@ function PostCard({ post }: { post: IPost }) {
       </div>
       <form className="mt-10 flex items-center gap-4">
         <img
-          src="/assets/images/profile.png"
+          src={`${user?.photoUrl ? user?.photoUrl : "/assets/images/profile.png"}`}
           alt="profile picture"
-          className="h-10 w-10"
+          className="h-10 w-10 rounded-full"
         />
         <div className="form-control relative w-full">
           <Input
