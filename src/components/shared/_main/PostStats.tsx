@@ -1,25 +1,34 @@
 import { useGetPostById } from "@/lib/react-query/queries";
 import React, { useContext, useState } from "react";
 import { useEffect } from "react";
-import { useSavePost } from "@/lib/react-query/mutations";
+import { useSavePost, useLikePost } from "@/lib/react-query/mutations";
 import { getCurrentUser, isPostSavedByUser } from "@/lib/firebase/api";
-import { deleteSavedPost } from "@/lib/firebase/api";
 import { AuthContext } from "@/context/AuthContext";
-import { set } from "date-fns";
+import { IPost } from "@/types/index";
+import { checkIsLiked } from "@/lib/utils";
+import { useDeleteSavedPost } from "@/lib/react-query/mutations";
 
-function PostStats({ post, comments }: { post: any; comments: any }) {
+type PostStatsProps = {
+  post: IPost;
+  comments: any;
+};
+
+function PostStats({ post, comments }: PostStatsProps) {
+  const likesList = post.likes ? post.likes.map((like: string) => like) : [];
+  const [likes, setLikes] = useState<string[]>(likesList);
   const [isLiked, setIsLiked] = useState<boolean>();
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [docId, setDocId] = useState<String | null>();
   const { mutate: savePost } = useSavePost();
+  const { mutate: likePost } = useLikePost();
+  const { mutate: deleteSavedPost } = useDeleteSavedPost();
   const { user } = useContext(AuthContext);
-  const { refetch } = useGetPostById(post.id);
 
   useEffect(() => {
     const checkIfPostIsSaved = async () => {
       if (user && post) {
         try {
-          const isSaved = await isPostSavedByUser(post.userId, post.postId);
+          const isSaved = await isPostSavedByUser(user.userId, post.postId);
           if (isSaved) {
             setIsSaved(isSaved);
           }
@@ -36,26 +45,43 @@ function PostStats({ post, comments }: { post: any; comments: any }) {
     e.stopPropagation();
     if (isSaved) {
       setIsSaved(false);
-      deleteSavedPost(post.postId, user.userId);
+      deleteSavedPost({ userId: user.userId, postId: post.postId });
     } else {
       setIsSaved(true);
       savePost({ postId: post.postId, userId: user.userId });
     }
   }
 
-  console.log("postId", post.userId, post.postId);
-  console.log("isSaved", isSaved);
+  function handleLikePost(e: React.MouseEvent<HTMLParagraphElement>) {
+    e.stopPropagation();
+
+    let likesArray = [...likes];
+
+    if (likesArray.includes(user.userId)) {
+      likesArray = likesArray.filter((id) => id !== user.userId);
+    } else {
+      likesArray.push(user.userId);
+    }
+
+    setLikes(likesArray);
+    likePost({ postId: post.postId, likesArray });
+  }
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex justify-between gap-[1.875rem]">
         <div className="flex items-center gap-[0.375rem]">
           <img
-            src={isLiked ? "/assets/icons/liked.svg" : "/assets/icons/like.svg"}
+            src={
+              checkIsLiked(likes, user.userId)
+                ? "/assets/icons/liked.svg"
+                : "/assets/icons/like.svg"
+            }
             alt=""
             className="w-5 cursor-pointer"
+            onClick={handleLikePost}
           />
-          <p className="min-w-[10px]">{10}</p>
+          <p className="min-w-[10px]">{likes.length}</p>
         </div>
         <div className="flex items-center gap-[0.375rem]">
           <img src="/assets/icons/chat.svg" alt="" />
