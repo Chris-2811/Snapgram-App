@@ -22,6 +22,7 @@ import {
   addDoc,
   deleteDoc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { create } from "domain";
@@ -236,7 +237,7 @@ export async function getPostsById(
   }
 }
 
-export async function savePost(postId: string, userId: string) {
+export async function savePost(userId: string, postId: string) {
   try {
     await setDoc(doc(db, "savedPosts", postId), {
       userId: userId,
@@ -366,6 +367,18 @@ export async function getPostsByPostIds(postIds: string[]) {
   } catch (error) {
     console.error("Error fetching posts by user ids", error);
     return [];
+  }
+}
+
+export async function likePost(postId: string, likesArray: string[]) {
+  try {
+    await updateDoc(doc(db, "posts", postId), {
+      likes: likesArray,
+    });
+
+    console.log("Post liked successfully");
+  } catch (error) {
+    console.error("Error liking post", error);
   }
 }
 
