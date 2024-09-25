@@ -49,3 +49,7 @@ export const replaceImageFormat = (url: string, newFormat = "webp") => {
   // Return the modified URL as a string
   return urlObj.toString();
 };
+
+export const checkIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};
