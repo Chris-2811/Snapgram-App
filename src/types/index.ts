@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface IUser {
   userId: string;
   email: string;
@@ -33,6 +35,7 @@ export interface IPost {
   postId: string;
   tags: string[];
   userId: string;
+  likes?: string[] | [];
 }
 
 export interface IComment {
