@@ -8,10 +8,24 @@ import { useNavigate } from "react-router-dom";
 import { IPost } from "@/types";
 import { AuthContext } from "@/context/AuthContext";
 import PostStats from "../shared/_main/PostStats";
+import { MAX_COMMENT_LENGTH } from "@/constants";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebase";
+import { useGetCommentsByPostId } from "@/lib/react-query/queries";
+import { getUserById } from "@/lib/firebase/api";
+import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
+import { useQueries } from "@tanstack/react-query";
+import CommentSection from "../shared/_main/CommentSection";
 
 function PostCard({ post }: { post: IPost }) {
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
   const [isCaptionExpanded, setIsCaptionExpanded] = useState<boolean>(false);
+  const [isCommentTooLong, setIsCommentTooLong] = useState<boolean>(false);
+  const [showAllComments, setShowAllComments] = useState<boolean>(false);
+  const { data: comments, refetch: refetchComments } = useGetCommentsByPostId(
+    post.postId,
+  );
+  const [text, setText] = useState("");
   const { data: postAuthor } = useGetUserById(post.userId);
   const { user } = useContext(AuthContext);
 
@@ -46,8 +60,44 @@ function PostCard({ post }: { post: IPost }) {
     trackMouse: true,
   });
 
+  function handleTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setText(e.target.value);
+    if (e.target.value.length === 0) {
+      setIsCommentTooLong(false);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (text.length > MAX_COMMENT_LENGTH) {
+      setIsCommentTooLong(true);
+      return;
+    }
+
+    if (text.length === 0) {
+      return;
+    }
+
+    const colRef = collection(db, "comments");
+
+    try {
+      await addDoc(colRef, {
+        postId: post.postId,
+        userId: user?.userId,
+        text: text,
+        timestamp: serverTimestamp(),
+      });
+
+      refetchComments();
+      setText("");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 pb-8 pt-[1.375rem] md:px-7 lg:pb-9 lg:pt-9">
+    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 py-4 md:px-7 lg:py-9">
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3">
@@ -80,7 +130,7 @@ function PostCard({ post }: { post: IPost }) {
         )}
         {/*  <img src="/assets/icons/edit.svg" alt="" className="w-5" /> */}
       </div>
-      <div className="mb-8 mt-5 font-semibold leading-[1.5]">
+      <div className="mb-4 mt-5 font-semibold leading-[1.5] md:mb-8">
         <div className="max-w-lg">
           {!isCaptionExpanded ? captionPreview : post.caption}
           {post.caption.length > 100 && (
@@ -130,10 +180,30 @@ function PostCard({ post }: { post: IPost }) {
             ></div>
           ))}
       </div>
-      <div className="mt-[1.875rem]">
-        <PostStats post={post} />
+      <div className="mt-3 md:mt-[1.875rem]">
+        <PostStats post={post} comments={comments} />
       </div>
-      <form className="mt-10 flex items-center gap-4">
+      <p
+        onClick={() => setShowAllComments(!showAllComments)}
+        className="mt-3 cursor-pointer text-xs text-light-300"
+      >
+        Show all comments...
+      </p>
+      {showAllComments && (
+        <div className="sm:hidden">
+          <CommentSection
+            comments={comments!}
+            text={text}
+            handleTextChange={handleTextChange}
+            handleSubmit={handleSubmit}
+            setShowAllComments={setShowAllComments}
+          />
+        </div>
+      )}
+      <form
+        onSubmit={handleSubmit}
+        className="mt-5 flex items-center gap-4 md:mt-10"
+      >
         <img
           src={`${user?.photoUrl ? user?.photoUrl : "/assets/images/profile.png"}`}
           alt="profile picture"
@@ -143,6 +213,8 @@ function PostCard({ post }: { post: IPost }) {
           <Input
             className="mt-0 h-11 bg-dark-400 ring-0 placeholder:text-light-400 focus:ring-0"
             placeholder="Write your comment..."
+            value={text}
+            onChange={handleTextChange}
           />
           <button className="absolute right-4 top-1/2 -translate-y-1/2">
             <img src="/assets/icons/plain.svg" alt="" className="" />
