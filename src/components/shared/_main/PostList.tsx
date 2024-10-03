@@ -4,11 +4,13 @@ import { useGetUserById } from "@/lib/react-query/queries";
 import PostStats from "./PostStats";
 import PostDetails from "./PostDetails";
 import { IPost } from "@/types";
-import { replaceImageFormat } from "@/lib/utils";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { set } from "date-fns";
 
 function PostList({ posts }: { posts: IPost[] }) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [currentPost, setCurrentPost] = useState<IPost>();
+  const [currentPostIndex, setCurrentPostIndex] = useState<number>(0);
   const { data: creator, isLoading } = useGetUserById(currentPost?.userId);
 
   function handleClick(post: any) {
@@ -19,6 +21,21 @@ function PostList({ posts }: { posts: IPost[] }) {
 
   function handleCloseModal(e: React.MouseEvent) {
     setShowModal(false);
+  }
+
+  function handleNextPost() {
+    if (currentPostIndex < posts.length - 1) {
+      setCurrentPostIndex(currentPostIndex + 1);
+      setCurrentPost(posts[currentPostIndex + 1]);
+    }
+  }
+
+  function handlePrevPost() {
+    if (currentPostIndex > 0) {
+      setCurrentPostIndex(currentPostIndex - 1);
+      setCurrentPost(posts[currentPostIndex - 1]);
+      `'`;
+    }
   }
 
   return (
@@ -55,6 +72,12 @@ function PostList({ posts }: { posts: IPost[] }) {
       {showModal && currentPost && !isLoading && (
         <>
           {/* Preload the image */}
+          <div
+            onClick={handlePrevPost}
+            className="fixed top-1/2 z-[1000] hidden -translate-y-[50%] cursor-pointer rounded-full bg-light-300 p-6 hover:bg-light-400 lg:left-2 lg:block xl:left-4"
+          >
+            <FaArrowLeft />
+          </div>
           <PostDetails
             handleCloseModal={handleCloseModal}
             currentPost={currentPost}
@@ -63,6 +86,12 @@ function PostList({ posts }: { posts: IPost[] }) {
               .slice(0, 3)
               .map((url) => `${url}&w=550&fit=max&q=85`)}
           />
+          <div
+            onClick={handleNextPost}
+            className="fixed top-1/2 z-[1000] hidden -translate-y-[50%] cursor-pointer rounded-full bg-light-300 p-6 hover:bg-light-400 lg:right-2 lg:block xl:right-4"
+          >
+            <FaArrowRight />
+          </div>
         </>
       )}
     </div>
