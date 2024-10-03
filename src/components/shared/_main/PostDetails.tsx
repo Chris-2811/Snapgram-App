@@ -93,6 +93,14 @@ function PostDetails({
     trackMouse: true,
   });
 
+  function handlePhotoClick() {
+    console.log("Photo clicked");
+    console.log("post.photoUrls.length", imageUrls.length);
+    if (imageUrls.length > 1) {
+      setActivePhotoIndex((prev) => (prev + 1) % imageUrls.length);
+    }
+  }
+
   const captionPreview =
     currentPost.caption.length > 60
       ? `${currentPost.caption.slice(0, 60)}...`
@@ -104,7 +112,7 @@ function PostDetails({
       : currentPost.tags;
 
   return (
-    <div>
+    <>
       <div
         onClick={handleCloseModal}
         className="fixed inset-0 bg-[#202020] opacity-60"
@@ -118,6 +126,7 @@ function PostDetails({
               alt=""
               className="h-full w-full object-cover"
               {...swipeHandlers}
+              onClick={handlePhotoClick}
             />
             <div className="absolute bottom-[1.125rem] left-1/2 flex justify-center gap-2">
               {imageUrls.length > 1 &&
@@ -290,7 +299,7 @@ function PostDetails({
         style={{ display: "none" }}
         onLoad={() => setIsImageLoaded(true)}
       />
-    </div>
+    </>
   );
 }
 
