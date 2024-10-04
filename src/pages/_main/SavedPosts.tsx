@@ -1,16 +1,18 @@
 import Tabbar from "@/components/ui/Tabbar";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Filter from "@/components/shared/_main/Filter";
 import { useGetSavedPosts } from "@/lib/react-query/queries";
 import { AuthContext } from "@/context/AuthContext";
 import PostList from "@/components/shared/_main/PostList";
 import { useGetPostsById } from "@/lib/react-query/queries";
-import { useInView, ref } from "react-intersection-observer";
+import { useInView } from "react-intersection-observer";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
+import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 function SavedPosts() {
   const [isActive, setActive] = React.useState("posts");
+  const [showFeed, setShowFeed] = useState<boolean>(false);
   const { user, isLoading } = useContext(AuthContext);
   const {
     data: savedPosts,
@@ -57,7 +59,7 @@ function SavedPosts() {
             </h1>
           </div>
           <div className="max-w-max">
-            <div className="mb-10 mt-7 flex max-w-[1900px] flex-col justify-between gap-5 xs:flex-row md:mb-[3.5rem] md:mt-10 md:items-center">
+            <div className="my-7 flex max-w-[1900px] flex-col justify-between gap-5 xs:flex-row md:mb-[3rem] md:mt-10 md:items-center">
               <Tabbar isActive={isActive} setActive={setActive} />
               <div>
                 <Filter />
@@ -65,7 +67,7 @@ function SavedPosts() {
             </div>
 
             <div>
-              <PostList posts={allPosts} />
+              <PostList posts={allPosts} setShowFeed={setShowFeed} />
               {/* <div className="my-[3.75rem] flex justify-center">
                 <Button
                   onClick={handleLoadMore}
