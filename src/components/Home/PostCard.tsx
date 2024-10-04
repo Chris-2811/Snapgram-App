@@ -97,7 +97,7 @@ function PostCard({ post }: { post: IPost }) {
   }
 
   return (
-    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 py-4 md:px-7 lg:py-9">
+    <div className="rounded-[30px] border border-dark-450 bg-dark-300 px-4 py-4 sm:px-5 sm:py-6 md:px-7 lg:py-9">
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3">
@@ -167,7 +167,7 @@ function PostCard({ post }: { post: IPost }) {
             "/assets/icons/profile-placeholder.svg"
           }
           alt="post-image"
-          className="h-[295px] w-full object-cover sm:h-[520px]"
+          className="aspect-[21/20] w-full object-cover sm:max-h-[520px]"
         />
       </div>
       <div className="mt-2 flex justify-center gap-2">
