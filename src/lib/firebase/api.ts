@@ -382,6 +382,30 @@ export async function likePost(postId: string, likesArray: string[]) {
   }
 }
 
+export async function deletePost(postId: string) {
+  try {
+    await deleteDoc(doc(db, "posts", postId));
+    await deleteDoc(doc(db, "savedPosts", postId));
+
+    // Query comments related to the postId
+    const commentsQuery = query(
+      collection(db, "comments"),
+      where("postId", "==", postId),
+    );
+
+    const commentsSnapshot = await getDocs(commentsQuery);
+
+    // Delete each comment sequentially
+    for (const commentDoc of commentsSnapshot.docs) {
+      await deleteDoc(doc(db, "comments", commentDoc.id));
+    }
+
+    console.log("Post deleted successfully");
+  } catch (error) {
+    console.error("Error deleting post", error);
+  }
+}
+
 // ====================
 // USERS
 // ====================
