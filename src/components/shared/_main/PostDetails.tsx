@@ -13,9 +13,10 @@ import { useSwipeable } from "react-swipeable";
 import PostStats from "./PostStats";
 import { MAX_COMMENT_LENGTH } from "@/constants";
 import { Link } from "react-router-dom";
+import { useDeletePost } from "@/lib/react-query/mutations";
 
 interface PostDetailsProps {
-  handleCloseModal: (e: React.MouseEvent) => void;
+  handleCloseModal: () => void;
   currentPost: IPost;
   creator: any;
   imageUrls: string[];
@@ -44,6 +45,7 @@ function PostDetails({
         queryFn: () => getUserById(comment.userId),
       })) || [],
   });
+  const { mutate: deletePost } = useDeletePost();
 
   const { user } = useContext(AuthContext);
 
@@ -99,6 +101,11 @@ function PostDetails({
     if (imageUrls.length > 1) {
       setActivePhotoIndex((prev) => (prev + 1) % imageUrls.length);
     }
+  }
+
+  async function handlePostDelete() {
+    deletePost(currentPost.postId);
+    handleCloseModal();
   }
 
   const captionPreview =
@@ -171,11 +178,13 @@ function PostDetails({
                     alt="edit"
                     className="w-5 cursor-pointer"
                   />
-                  <img
-                    src="/assets/icons/delete.svg"
-                    alt="delete"
-                    className="w-5 cursor-pointer"
-                  />
+                  <div onClick={handlePostDelete}>
+                    <img
+                      src="/assets/icons/delete.svg"
+                      alt="delete"
+                      className="w-5 cursor-pointer"
+                    />
+                  </div>
                 </div>
               )}
             </div>
