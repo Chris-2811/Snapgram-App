@@ -98,7 +98,7 @@ function PostList({
         </ul>
       ) : (
         <>
-          {location.pathname === "/explore" && (
+          {location.pathname === "/explore" ? (
             <div
               onClick={() => setShowFeed(false)}
               className="fixed top-[81px] z-[100] flex w-full max-w-[594px] cursor-pointer items-center bg-dark-100 py-5 md:top-0 md:py-8 lg:max-w-[610px]"
@@ -108,8 +108,16 @@ function PostList({
                 Explore
               </p>
             </div>
+          ) : (
+            <div
+              onClick={() => setShowFeed(false)}
+              className="mb-5 flex cursor-pointer items-center"
+            >
+              <MdOutlineKeyboardArrowLeft size={30} />
+              <p className="font-bold md:text-lg">Return</p>
+            </div>
           )}
-          <div className="mt-10">
+          <div className="">
             <SocialStream posts={posts} currentPost={currentPost} />
           </div>
         </>
