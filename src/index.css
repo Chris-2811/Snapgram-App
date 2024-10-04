@@ -7,7 +7,7 @@
   body {
     min-height: 100vh;
     line-height: 1.4;
-    @apply bg-dark-200 text-white;
+    @apply bg-dark-200 font-inter text-white;
   }
 
   /* Prevent font size inflation */
@@ -22,14 +22,17 @@
   }
 
   /* Set shorter line heights on headings and interactive elements */
-  h1,
-  h2,
-  h3,
-  h4,
   button,
   input,
   label {
     line-height: 1.1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
   }
 
   /* Balance text wrapping on headings */
@@ -91,7 +94,7 @@
   /* Typography */
 
   .heading-lg {
-    @apply text-[2.25rem] font-bold;
+    @apply text-[2.25rem] font-bold tracking-[-1px];
   }
 
   .heading-md {
