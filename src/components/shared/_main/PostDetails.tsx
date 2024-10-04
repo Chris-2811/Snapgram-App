@@ -115,7 +115,7 @@ function PostDetails({
     <>
       <div
         onClick={handleCloseModal}
-        className="fixed inset-0 bg-[#202020] opacity-60"
+        className="fixed inset-0 hidden bg-[#202020] opacity-60 lg:block"
       ></div>
 
       {isImageLoaded && (
