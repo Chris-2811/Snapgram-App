@@ -45,7 +45,7 @@ function PostList({
     setCurrentPost(post);
   }
 
-  function handleCloseModal(e: React.MouseEvent) {
+  function handleCloseModal() {
     setShowModal(false);
   }
 
