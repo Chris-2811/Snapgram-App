@@ -24,7 +24,7 @@ function Home() {
     <div className="w-full">
       <div className="flex w-full max-w-[600px] items-center justify-between">
         <h2 className="heading-md">Home Feed</h2>
-        <div className="flex items-center gap-[0.625rem] rounded-[14px] bg-dark-400 px-4 py-3">
+        <div className="flex items-center gap-[0.625rem] rounded-[14px] bg-dark-400">
           <Filter />
         </div>
       </div>
