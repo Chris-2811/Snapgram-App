@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { INewUser, IPost } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { QUERY_KEYS } from "./queryKeys";
-import { deleteSavedPost } from "../firebase/api";
+import { deleteSavedPost, deletePost } from "../firebase/api";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -84,6 +84,18 @@ export const useLikePost = () => {
 
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS_BY_IDS],
+      });
+    },
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
       });
     },
   });
