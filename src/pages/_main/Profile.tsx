@@ -29,8 +29,8 @@ function Profile() {
 
   return (
     <div className="flex-1 px-4 pt-8 sm:px-7 lg:px-[3.75rem] lg:pt-20">
-      <div className="flex flex-col gap-7 md:flex-row md:items-start lg:gap-[1.875rem]">
-        <div className="flex items-center gap-4">
+      <div className="mb-8 flex flex-col gap-7 md:mb-10 md:flex-row md:items-start lg:gap-[1.875rem]">
+        <div className="flex items-start gap-4">
           <img
             src={
               userData?.photoUrl
@@ -42,7 +42,7 @@ function Profile() {
           />
           <div className="flex flex-col gap-4 md:hidden lg:flex-row lg:items-baseline lg:gap-10">
             <div>
-              <h1 className="heading-sm lg:heading-lg mb-1">
+              <h1 className="lg:heading-lg heading-sm mb-1">
                 {userData?.name}
               </h1>
               {userData?.username && (
@@ -75,14 +75,16 @@ function Profile() {
             </div>
           </div>
         </div>
-        <div>
+        <div className="">
           <div className="hidden flex-col gap-4 md:flex lg:flex-row lg:items-baseline lg:gap-10">
             <div>
               <h1 className="heading-sm lg:heading-lg mb-1">
                 {userData?.name}
               </h1>
               {userData?.username && (
-                <div className="text-light-400">@{userData?.username}</div>
+                <div className="text-light-400 lg:text-lg">
+                  @{userData?.username}
+                </div>
               )}
             </div>
             <div className="hidden">
@@ -110,7 +112,7 @@ function Profile() {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-10 lg:mt-[1.375rem]">
+          <div className="flex items-center gap-4 md:mt-[1rem] md:gap-10 lg:mt-[1.375rem]">
             <div className={`${!isCurrentUser && "flex items-center gap-2"}`}>
               <div className="text-lg font-medium tracking-[-1px] text-primary md:text-xl">
                 273
@@ -131,9 +133,11 @@ function Profile() {
             </div>
           </div>
 
-          <div className="mb-10 mt-6 sm:max-w-xl md:text-balance 2xl:max-w-[628px]">
-            {userData?.bio}
-          </div>
+          {userData?.bio && (
+            <div className="mt-6 sm:max-w-xl md:text-balance 2xl:max-w-[628px]">
+              {userData?.bio}
+            </div>
+          )}
         </div>
       </div>
 
