@@ -1,4 +1,4 @@
-import { INewUser, IPost, IUser, IComment } from "@/types";
+import { INewUser, IPost, IUser, IComment, IReel } from "@/types";
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -477,5 +477,50 @@ export async function getCommentsByPostId(postId: string) {
     return comments;
   } catch (error) {
     console.error("Error fetching comments", error);
+  }
+}
+
+// ====================
+// REELS
+// ====================
+
+export async function getAllReels({
+  pageParam,
+  reelLimit,
+}: {
+  pageParam: string | null;
+  reelLimit: number;
+}) {
+  try {
+    let q;
+
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "reels", pageParam));
+      q = query(
+        collection(db, "reels"),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(reelLimit),
+      );
+    } else {
+      q = query(
+        collection(db, "reels"),
+        orderBy("createdAt", "desc"),
+        limit(reelLimit),
+      );
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot) throw new Error();
+
+    const reels = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as IReel[];
+
+    return reels;
+  } catch (error) {
+    console.error("Error fetching reels", error);
+    throw new Error("Failed to fetch reels");
   }
 }
