@@ -173,11 +173,13 @@ function PostDetails({
               </div>
               {user.userId === currentPost.userId && (
                 <div className="flex gap-3">
-                  <img
-                    src="/assets/icons/edit.svg"
-                    alt="edit"
-                    className="w-5 cursor-pointer"
-                  />
+                  <div>
+                    <img
+                      src="/assets/icons/edit.svg"
+                      alt="edit"
+                      className="w-5 cursor-pointer"
+                    />
+                  </div>
                   <div onClick={handlePostDelete}>
                     <img
                       src="/assets/icons/delete.svg"
