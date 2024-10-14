@@ -44,3 +44,14 @@ export interface IComment {
   text: string;
   userId: string;
 }
+
+export interface IReel {
+  videoUrl: string;
+  caption: string;
+  likes: string[];
+  userId: string;
+  tags: string[];
+  createdAt: string;
+  played: number;
+  reelId: string;
+}
