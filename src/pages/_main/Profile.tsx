@@ -10,11 +10,12 @@ import React, { useContext, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Tabbar from "@/components/ui/Tabbar";
 import { Button } from "@/components/ui/button";
+import Filter from "@/components/shared/_main/Filter";
 /* import Reel from "@/components/shared/_main/Reel";
  */
 function Profile() {
   const [isActive, setActive] = useState("posts");
-  const { id } = useParams();
+  const { id } = useParamss();
   const params = useParams();
   const { user } = useContext(AuthContext);
   const { data: userData } = useGetUserById(id);
@@ -49,7 +50,7 @@ function Profile() {
                 <div className="text-light-400">@{userData?.username}</div>
               )}
             </div>
-            <div className="hidden">
+            <div className="md:hidden">
               {isCurrentUser ? (
                 <Link
                   to={`/edit-profile/${user?.userId}`}
@@ -87,7 +88,7 @@ function Profile() {
                 </div>
               )}
             </div>
-            <div className="hidden">
+            <div className="hidden md:block">
               {isCurrentUser ? (
                 <Link
                   to={`/edit-profile/${user?.userId}`}
@@ -141,7 +142,10 @@ function Profile() {
         </div>
       </div>
 
-      <Tabbar setActive={setActive} isActive={isActive} />
+      <div className="items-cener flex justify-between">
+        <Tabbar setActive={setActive} isActive={isActive} />
+        <Filter />
+      </div>
 
       <div className="mt-7 max-w-max lg:mt-[3.5rem]">
         {isActive === "posts" && posts && <PostList posts={allPosts} />}
