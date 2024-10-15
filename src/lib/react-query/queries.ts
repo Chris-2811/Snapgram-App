@@ -8,6 +8,7 @@ import {
   getPostsById,
   getCommentsByPostId,
   getSavedPosts,
+  getAllReels,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -115,5 +116,21 @@ export const useGetSavedPosts = (userId: string) => {
 
       return lastId;
     },
+  });
+};
+
+export const useGetAllReels = (reelLimit: number) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_REELS, null],
+    queryFn: ({ pageParam = null }) => getAllReels({ pageParam, reelLimit }), // Pass pageParam to getPosts
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage.length < 9) {
+        return undefined; // Return undefined instead of null when there are
+      }
+
+      const lastId = lastPage[lastPage.length - 1]?.postId;
+      return lastId;
+    },
+    initialPageParam: null,
   });
 };
