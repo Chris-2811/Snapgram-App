@@ -2,6 +2,7 @@ import PostList from "@/components/shared/_main/PostList";
 import { AuthContext } from "@/context/AuthContext";
 import {
   useGetPostsById,
+  useGetReelsById,
   /* useGetReels, */
   /* useGetReelsById, */
   useGetUserById,
@@ -13,13 +14,16 @@ import { Button } from "@/components/ui/button";
 import Filter from "@/components/shared/_main/Filter";
 /* import Reel from "@/components/shared/_main/Reel";
  */
+import ReelList from "@/components/shared/_main/ReelList";
+
 function Profile() {
   const [isActive, setActive] = useState("posts");
-  const { id } = useParamss();
+  const { id } = useParams();
   const params = useParams();
   const { user } = useContext(AuthContext);
   const { data: userData } = useGetUserById(id);
   const { data: posts, hasNextPage, fetchNextPage } = useGetPostsById(id);
+  const { data: reels } = useGetReelsById(id);
 
   /*   const { data: posts, fetchNextPage, hasNextPage } = useGetPostsById(id);
    */ /*   const { data: reels } = useGetReelsById(id); */
@@ -27,6 +31,12 @@ function Profile() {
   const isCurrentUser = id === user?.userId;
 
   const allPosts = posts?.pages.flatMap((page) => page.map((post) => post));
+
+  const allReels = reels
+    ? reels?.pages.flatMap((page) => page.map((reel) => reel))
+    : [];
+
+  console.log("reels", allReels);
 
   return (
     <div className="flex-1 px-4 pt-8 sm:px-7 lg:px-[3.75rem] lg:pt-20">
@@ -149,13 +159,7 @@ function Profile() {
 
       <div className="mt-7 max-w-max lg:mt-[3.5rem]">
         {isActive === "posts" && posts && <PostList posts={allPosts} />}
-        {/*  {isActive === "reels" && reels && (
-          <div className="grid gap-6 lg:grid-cols-3">
-            {reels.pages[0].map((reel) => (
-              <Reel reel={reel} />
-            ))}
-          </div>
-        )} */}
+        {isActive === "reels" && reels && <ReelList reels={allReels} />}
         <div className="relative z-50 mt-[2.125rem] flex h-20 justify-center">
           {hasNextPage && (
             <Button
