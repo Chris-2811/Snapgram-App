@@ -524,3 +524,46 @@ export async function getAllReels({
     throw new Error("Failed to fetch reels");
   }
 }
+
+export async function getReelsById({
+  pageParam,
+  userId,
+}: {
+  pageParam: string | null;
+  userId: string;
+}) {
+  try {
+    let q;
+
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "reels", pageParam));
+
+      q = query(
+        collection(db, "reels"),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(10),
+      );
+    } else {
+      q = query(
+        collection(db, "reels"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        limit(10),
+      );
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot) throw new Error();
+
+    const reels = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as IReel[];
+
+    return reels;
+  } catch (error) {
+    console.log("Error fetching reels by id", error);
+    throw new Error("Failed to fetch reels by id");
+  }
+}
