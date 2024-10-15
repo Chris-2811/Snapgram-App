@@ -11,7 +11,7 @@ function Searchbar() {
       />
       <Input
         placeholder="Search"
-        className="pl-[3.75rem] text-lg placeholder:text-light-400"
+        className="mt-0 pl-[3.75rem] text-lg placeholder:text-light-400"
       />
     </div>
   );
