@@ -9,6 +9,7 @@ import {
   getCommentsByPostId,
   getSavedPosts,
   getAllReels,
+  getReelsById,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -129,6 +130,28 @@ export const useGetAllReels = (reelLimit: number) => {
       }
 
       const lastId = lastPage[lastPage.length - 1]?.postId;
+      return lastId;
+    },
+    initialPageParam: null,
+  });
+};
+
+export const useGetReelsById = (id: string | undefined) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_REELS_BY_ID, id],
+    queryFn: ({ pageParam = null }) => getReelsById({ pageParam, userId: id }),
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage && lastPage.length < 10) {
+        return undefined;
+      }
+
+      const lastId = lastPage[lastPage.length - 1]?.postId;
+
+      if (!lastId) {
+        console.error("Last post ID not found");
+        return undefined;
+      }
+
       return lastId;
     },
     initialPageParam: null,
