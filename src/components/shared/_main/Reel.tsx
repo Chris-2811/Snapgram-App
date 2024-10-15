@@ -1,15 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { IReel } from "@/types";
 
-function Reel() {
+function Reel({ reel }: { reel: IReel }) {
   const [progress, setProgress] = React.useState(0);
   const [isPlaying, setIsPlaying] = React.useState(false);
-
-  const reel = {
-    url: "https://www.w3schools.com/html/mov_bbb.mp4",
-    caption: "This is a caption",
-    userId: "user1",
-  };
 
   const user = {
     username: "user1",
@@ -33,12 +28,14 @@ function Reel() {
     if (progress === 100) setIsPlaying(false);
   }
 
+  console.log(reel);
+
   return (
-    <div className="relative aspect-[17/30] w-[340px] overflow-hidden rounded-[30px]">
+    <div className="relative aspect-[17/30] overflow-hidden rounded-[30px] border border-light-300/60">
       <video
         onClick={togglePlayPause}
         onTimeUpdate={handleTimeUpdate}
-        src={reel.url}
+        src={reel.videoUrl}
         alt=""
         className="h-full w-full object-cover"
       />
@@ -52,11 +49,15 @@ function Reel() {
       )}
       <div className="absolute bottom-7 left-6 right-6 z-50">
         <div className="text-sm font-bold uppercase text-primary">
-          <p>fitness</p>
+          <div className="flex gap-2">
+            {reel.tags.slice(0, 2).map((tag) => (
+              <div className="">#{tag}</div>
+            ))}
+          </div>
         </div>
-        <h2 className="font-base mt-2 font-semibold leading-[1.4] text-white">
+        <h2 className="font-base z-[100] mt-2 text-nowrap font-medium leading-[1.4]">
           {reel.caption.length > 40
-            ? reel.caption.substring(0, 37) + "..."
+            ? reel.caption.substring(0, 30) + "..."
             : reel.caption}
         </h2>
         <div className="mt-6 flex items-center justify-between">
