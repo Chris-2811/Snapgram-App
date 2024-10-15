@@ -13,8 +13,9 @@ import { auth } from "@/lib/firebase/firebase";
 import { useSaveUserToDB } from "@/lib/react-query/mutations";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 function OAuth() {
   const { pathname } = useLocation();
@@ -44,16 +45,24 @@ function OAuth() {
         createdAt: Timestamp.now(),
       };
 
-      const userInDatabase = await getDoc(doc(db, "users", newUser.userId));
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          // User is signed in, proceed with Firestore operations
+          const userInDatabase = await getDoc(doc(db, "users", newUser.userId));
 
-      if (userInDatabase.exists()) {
-        navigate("/");
-        return;
-      }
+          if (userInDatabase.exists()) {
+            // User already exists in the database
+            navigate("/");
+            return;
+          }
 
-      await saveUserToDB(newUser);
-
-      navigate("/");
+          // Save the new user to Firestore
+          await setDoc(doc(db, "users", newUser.userId), newUser);
+          navigate("/");
+        } else {
+          console.log("No user is signed in.");
+        }
+      });
     } catch (error) {
       toast({
         title: "Uh oh! Something went wrong.",
