@@ -49,7 +49,7 @@ function EditProfile() {
       await updateDoc(docRef, { ...formData });
 
       if (selectedFile) {
-        const storageRef = ref(storage, selectedFile.name);
+        const storageRef = ref(storage, `avatars/${selectedFile.name}`);
         const snapshot = await uploadBytes(storageRef, selectedFile);
         const downloadUrl = await getDownloadURL(snapshot.ref);
 
