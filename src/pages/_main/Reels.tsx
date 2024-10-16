@@ -13,14 +13,10 @@ function Reels() {
   const [activeTab, setActiveTab] = useState("for-you");
   const { data: reels } = useGetAllReels(9);
 
-  console.log(reels);
-
   const flatReels = reels ? reels?.pages.flatMap((page) => page) : [];
 
-  console.log(flatReels);
-
   return (
-    <div className="mx-auto px-4 pb-6 pt-6 sm:max-w-[580px] sm:pt-9 md:max-w-[712px] md:px-8 md:pb-14 md:pt-[3.5rem] lg:max-w-[1552px] lg:pt-[4.375rem] xl:px-[3.75rem]">
+    <div className="mx-auto px-4 pb-6 pt-6 sm:max-w-[580px] sm:pt-9 md:max-w-none md:px-8 md:pb-14 md:pt-[3.5rem] lg:max-w-[1552px] lg:pt-[4.375rem] xl:px-[3.75rem]">
       <div className="mb-4">
         <div className="flex-center gap-[0.375rem]">
           <img
