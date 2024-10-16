@@ -34,17 +34,17 @@ function ReelDetails({
   }
 
   return (
-    <div className="">
+    <>
       <div
         onClick={handleCloseReelDetails}
         className="fixed inset-0 bg-[#202020] opacity-75"
       ></div>
-      <div className="fixed top-1/2 z-[100] -translate-y-[50%]">
+      <div className="fixed left-1/2 top-1/2 z-[100] -translate-x-[50%] -translate-y-[50%]">
         <div className="flex flex-col overflow-hidden rounded-[15px] bg-dark-200 md:flex-row">
-          <div className="relative aspect-[17/30] w-[540px]">
+          <div className="relative aspect-[17/30] w-[550px]">
             <Reel reel={currentReel} className="z-[10] rounded-none" />
           </div>
-          <div className="flex w-[420px] flex-col px-4 py-5">
+          <div className="flex w-[440px] flex-col px-4 py-5">
             <div className="flex-1">
               <div className="flex items-center gap-3">
                 <Link to={`/profile/${user?.userId}`}>
@@ -102,7 +102,7 @@ function ReelDetails({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
