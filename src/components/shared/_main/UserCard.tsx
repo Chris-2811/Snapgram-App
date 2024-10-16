@@ -17,7 +17,7 @@ function UserCard({ creator, size }: UserCardProps) {
     >
       <div className="grid h-full grid-rows-[auto_1fr_auto] place-items-center">
         <div>
-          <Link to={`/profile/${creator.id}`}>
+          <Link to={`/profile/${creator.userId}`}>
             <img
               src={creator.photoUrl}
               alt="avatar"
