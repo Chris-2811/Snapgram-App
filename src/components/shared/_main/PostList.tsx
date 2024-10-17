@@ -14,6 +14,7 @@ import { Explore } from "@/pages";
 import { Button } from "@/components/ui/button";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import MediaOverlay from "./MediaOverlay";
 
 function PostList({
   posts,
@@ -93,6 +94,7 @@ function PostList({
                   className="invert-white absolute right-0 top-0 lg:right-[0.875rem] lg:top-[1.375rem]"
                 ></img>
               )}
+              <MediaOverlay />
             </li>
           ))}
         </ul>
