@@ -7,11 +7,11 @@ import Tabbar from "@/components/ui/Tabbar";
 import Filter from "@/components/shared/_main/Filter";
 import TabbarReels from "@/components/Reels/TabbarReels";
 import HashtagBatch from "@/components/ui/hashtag-batch";
-import { Hash } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 function Reels() {
   const [activeTab, setActiveTab] = useState("for-you");
-  const { data: reels } = useGetAllReels(9);
+  const { data: reels, hasNextPage, fetchNextPage } = useGetAllReels(9);
 
   const flatReels = reels ? reels?.pages.flatMap((page) => page) : [];
 
@@ -49,7 +49,19 @@ function Reels() {
           <Filter className="px-3 text-[0.625rem] xs:text-xs" />
         </div>
         <div className="mt-6 md:mt-8 lg:mt-9">
-          <ReelList reels={flatReels} />
+          <div>
+            <ReelList reels={flatReels} />
+            {hasNextPage && (
+              <div className="flex justify-center">
+                <Button
+                  onClick={() => fetchNextPage()}
+                  className="mt-10 w-[132px] rounded-md border border-light-300/70 bg-dark-400 text-white"
+                >
+                  Load More
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
