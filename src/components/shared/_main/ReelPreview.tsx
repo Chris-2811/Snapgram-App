@@ -13,7 +13,11 @@ function ReelPreview({ reel, className }: { reel: any; className?: string }) {
         className,
       )}
     >
-      <video src={reel.videoUrl} alt="" className="w-full" />
+      <video
+        src={reel.videoUrl}
+        alt=""
+        className="absolute left-0 top-0 h-full w-full object-cover"
+      />
       <div className="absolute right-4 top-4">
         <img
           src="assets/icons/play.svg"
