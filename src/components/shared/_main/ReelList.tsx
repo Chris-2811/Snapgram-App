@@ -4,10 +4,12 @@ import Reel from "./Reel";
 import ReelDetails from "./ReelDetails";
 import ReelPreview from "./ReelPreview";
 import { useMediaQuery } from "react-responsive";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 function ReelList({ reels }: { reels: IReel[] }) {
   const [showReelDetails, setShowReelDetails] = React.useState<boolean>(false);
   const [currentReel, setCurrentReel] = React.useState<IReel>();
+  const [currentReelIndex, setCurrentReelIndex] = React.useState<number>(0);
   const isLargeScreen = useMediaQuery({ query: "(min-width: 1024px)" });
 
   function handleCloseReelDetails() {
@@ -17,6 +19,26 @@ function ReelList({ reels }: { reels: IReel[] }) {
   function handleReelClick(reel: IReel) {
     setShowReelDetails(!showReelDetails);
     setCurrentReel(reel);
+  }
+
+  function handleNextReel() {
+    if (currentReelIndex < reels.length - 1) {
+      setCurrentReelIndex(currentReelIndex + 1);
+      setCurrentReel(reels[currentReelIndex + 1]);
+    } else if (currentReelIndex === reels.length - 1) {
+      setCurrentReelIndex(0);
+      setCurrentReel(reels[0]);
+    }
+  }
+
+  function handlePrevReel() {
+    if (currentReelIndex > 0) {
+      setCurrentReelIndex(currentReelIndex - 1);
+      setCurrentReel(reels[currentReelIndex - 1]);
+    } else if (currentReelIndex === 0) {
+      setCurrentReelIndex(reels.length - 1);
+      setCurrentReel(reels[reels.length - 1]);
+    }
   }
 
   return (
@@ -34,10 +56,24 @@ function ReelList({ reels }: { reels: IReel[] }) {
         ))}
       </div>
       {showReelDetails && isLargeScreen && (
-        <ReelDetails
-          handleCloseReelDetails={handleCloseReelDetails}
-          currentReel={currentReel!}
-        />
+        <>
+          <div
+            onClick={handlePrevReel}
+            className="fixed top-1/2 z-[1000] hidden -translate-y-[50%] cursor-pointer rounded-full bg-light-300 p-6 hover:bg-light-400 lg:left-2 lg:block xl:left-4"
+          >
+            <FaArrowLeft />
+          </div>
+          <ReelDetails
+            handleCloseReelDetails={handleCloseReelDetails}
+            currentReel={currentReel!}
+          />
+          <div
+            onClick={handleNextReel}
+            className="fixed top-1/2 z-[1000] hidden -translate-y-[50%] cursor-pointer rounded-full bg-light-300 p-6 hover:bg-light-400 lg:right-2 lg:block xl:right-4"
+          >
+            <FaArrowRight />
+          </div>
+        </>
       )}
     </div>
   );
