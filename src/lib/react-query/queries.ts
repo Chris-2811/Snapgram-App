@@ -129,7 +129,12 @@ export const useGetAllReels = (reelLimit: number) => {
         return undefined; // Return undefined instead of null when there are
       }
 
-      const lastId = lastPage[lastPage.length - 1]?.postId;
+      const lastId = lastPage[lastPage.length - 1]?.reelId;
+
+      if (!lastId) {
+        console.error("Last reel ID not found");
+        return undefined;
+      }
       return lastId;
     },
     initialPageParam: null,
