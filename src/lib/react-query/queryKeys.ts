@@ -22,6 +22,7 @@ export enum QUERY_KEYS {
   CHECK_IF_LIKED = "checkIfLiked",
   GET_LIKES_BY_POST_ID = "getLikesByPostId",
   GET_COMMENTS_BY_POST_ID = "getCommentsByPostId",
+  GET_TOTAL_POST_COUNT = "getTotalPostCount",
 
   //  SEARCH KEYS
   SEARCH_POSTS = "getSearchPosts",

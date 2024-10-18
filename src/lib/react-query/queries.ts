@@ -10,6 +10,7 @@ import {
   getSavedPosts,
   getAllReels,
   getReelsById,
+  getTotalPostCount,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -160,5 +161,13 @@ export const useGetReelsById = (id: string | undefined) => {
       return lastId;
     },
     initialPageParam: null,
+  });
+};
+
+export const useGetTotalPostCount = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TOTAL_POST_COUNT, userId],
+    queryFn: () => getTotalPostCount(userId),
+    enabled: !!userId,
   });
 };
