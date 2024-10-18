@@ -406,6 +406,20 @@ export async function deletePost(postId: string) {
   }
 }
 
+export async function getTotalPostCount(id: string) {
+  try {
+    const q = query(collection(db, "posts"), where("userId", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    console.log("querySnapshot", querySnapshot.size);
+
+    return querySnapshot.size;
+  } catch (error) {
+    console.error("Error getting total post count", error);
+    throw new Error("Failed to get total post count");
+  }
+}
+
 // ====================
 // USERS
 // ====================
