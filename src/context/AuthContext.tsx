@@ -31,14 +31,14 @@ interface IContext {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AuthContext = createContext<IContext>(INITIAL_STATE);
+export const AuthContext = createContext<any>(INITIAL_STATE);
 
 export const AuthContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = useState<IUser>(INITIAL_USER);
+  const [user, setUser] = useState<any>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
