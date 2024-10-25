@@ -11,12 +11,22 @@ import {
   getAllReels,
   getReelsById,
   getTotalPostCount,
+  getCurrentUser,
+  getReelsByUserIds,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
     queryFn: () => getUserById(userId),
+    enabled: !!userId,
+  });
+};
+
+export const useGetCurrentUser = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER, userId],
+    queryFn: () => getCurrentUser(userId!),
     enabled: !!userId,
   });
 };
@@ -169,5 +179,13 @@ export const useGetTotalPostCount = (userId: string) => {
     queryKey: [QUERY_KEYS.GET_TOTAL_POST_COUNT, userId],
     queryFn: () => getTotalPostCount(userId),
     enabled: !!userId,
+  });
+};
+
+export const useGetReelsByUserIds = (userIds: string[]) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_REELS_BY_USER_IDS, userIds],
+    queryFn: () => getReelsByUserIds(userIds),
+    enabled: userIds.length > 0,
   });
 };
