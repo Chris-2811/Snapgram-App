@@ -617,4 +617,120 @@ export async function getReelsByUserIds(userIds: string[]) {
     return [];
   }
 }
+// ====================
+// FOLLOWERS
+// ====================
+
+export async function followUser({
+  userId,
+  followedUserId,
+}: {
+  userId: string;
+  followedUserId: string;
+}) {
+  try {
+    if (userId === followedUserId) {
+      throw new Error("You can't follow yourself");
+    }
+
+    const userDocRef = doc(db, "users", userId);
+    const followedDocRef = doc(db, "users", followedUserId);
+
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      throw new Error("User not found");
+    }
+
+    const currentUserFollowing = userSnapshot.data().following || [];
+
+    const isFollowingUser = currentUserFollowing.some(
+      (follow) => follow.userId === followedUserId,
+    );
+
+    if (isFollowingUser) {
+      console.log("User is already following this user");
+      return;
+    }
+
+    const isFollowing = await updateDoc(userDocRef, {
+      following: arrayUnion({
+        followedAt: Timestamp.now(),
+        userId: followedUserId,
+      }),
+    });
+
+    await updateDoc(followedDocRef, {
+      followers: arrayUnion({
+        followedAt: Timestamp.now(),
+        userId: userId,
+      }),
+    });
+
+    console.log("user followed successfully", userId, followedUserId);
+    console.log("User followed successfully");
+  } catch (error) {
+    console.error("Error following user", error);
+  }
+}
+
+export async function unfollowUser({
+  userId,
+  followedUserId,
+}: {
+  userId: string;
+  followedUserId: string;
+}) {
+  console.log("function gets called");
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const followedDocRef = doc(db, "users", followedUserId);
+
+    const userSnapshot = await getDoc(userDocRef);
+    const followedSnapshot = await getDoc(followedDocRef);
+
+    if (!userSnapshot.exists()) {
+      throw new Error("User not found");
+    }
+
+    if (!followedSnapshot.exists()) {
+      throw new Error("User not found");
+    }
+
+    const currentUserFollowing = userSnapshot.data().following || [];
+    const followedUserFollowers = followedSnapshot.data().followers || [];
+
+    const isFollowingUser = currentUserFollowing.some(
+      (follow) => follow.userId === followedUserId,
+    );
+
+    if (!isFollowingUser) {
+      console.log("User is not following this user");
+      return;
+    }
+
+    // Remove the followed user from the current user's following list
+    const followingToRemove = currentUserFollowing.find(
+      (follow) => follow.userId === followedUserId,
+    );
+    if (followingToRemove) {
+      await updateDoc(userDocRef, {
+        following: arrayRemove(followingToRemove), // Remove the object
+      });
+    }
+
+    // Remove the current user from the followed user's followers list
+    const followerToRemove = followedUserFollowers.find(
+      (follow) => follow.userId === userId,
+    );
+    if (followerToRemove) {
+      await updateDoc(followedDocRef, {
+        followers: arrayRemove(followerToRemove), // Remove the object
+      });
+    }
+
+    console.log("User unfollowed successfully");
+  } catch (error) {
+    console.error("Error unfollowing user", error);
+  }
 }
