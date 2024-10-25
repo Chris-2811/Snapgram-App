@@ -3,22 +3,32 @@ import { HoverEffect } from "../ui/card-hover-effect";
 import { useGetUsers } from "../../lib/react-query/queries";
 
 function TopCreators({ user }: any) {
-  const { data: userPages } = useGetUsers();
-  const allUsers = userPages?.pages.flatMap((page: any) => page).slice(0, 8);
+  const { data: users, refetch: refetchUsers } = useGetUsers();
+  const allUsers = users?.pages.flatMap((page: any) => page).slice(0, 8);
 
   const usersToShow = {
     default: allUsers?.slice(0, 4),
     xxl: allUsers?.slice(0, 8),
   };
 
+  const handleFollowChange = () => {
+    refetchUsers();
+  };
+
   return (
     <div className="sticky top-0 hidden h-screen w-full max-w-fit grow border border-orange-400 px-6 pt-10 lg:max-h-[1024px] xl:block 3xl:max-w-[465px]">
       <h1 className="heading-md">Top Creators</h1>
       <div className="block 3xl:hidden">
-        <HoverEffect items={usersToShow.default} />
+        <HoverEffect
+          items={usersToShow.default}
+          handleFollowChange={handleFollowChange}
+        />
       </div>
       <div className="hidden 3xl:block">
-        <HoverEffect items={usersToShow.xxl} />
+        <HoverEffect
+          items={usersToShow.xxl}
+          handleFollowChange={handleFollowChange}
+        />
       </div>
     </div>
   );
