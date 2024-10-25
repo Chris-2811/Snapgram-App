@@ -43,18 +43,21 @@ function ReelList({ reels }: { reels: IReel[] }) {
 
   return (
     <div>
-      <div className="grid justify-center gap-y-5 md:grid-cols-2 md:justify-start md:gap-5 md:gap-y-6 lg:grid-cols-[repeat(auto-fill,340px)] lg:gap-x-6">
-        {reels.map((reel) => (
-          <div onClick={() => handleReelClick(reel)}>
+      <ul
+        role="list"
+        className="grid justify-center gap-y-5 md:grid-cols-2 md:justify-start md:gap-5 md:gap-y-6 lg:grid-cols-[repeat(auto-fill,340px)] lg:gap-x-6"
+      >
+        {reels.map((reel, index) => (
+          <li key={index} onClick={() => handleReelClick(reel)}>
             <div className="hidden md:block">
               <ReelPreview reel={reel} />
             </div>
             <div className="md:hidden">
               <Reel reel={reel} />
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
       {showReelDetails && isLargeScreen && (
         <>
           <div
