@@ -1,13 +1,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import FollowButton from "./FollowButton";
+import { getCurrentUser } from "@/lib/firebase/api";
 
 interface UserCardProps {
   size?: String;
   creator: any;
+  handleFollowChange: () => void;
 }
 
-function UserCard({ creator, size }: UserCardProps) {
+function UserCard({ creator, size, handleFollowChange }: UserCardProps) {
   console.log("creator", creator);
   return (
     <div
@@ -41,9 +44,12 @@ function UserCard({ creator, size }: UserCardProps) {
             </small>
           )}
         </div>
-        <Button className="mt-3 block bg-primary" size="sm">
-          Follow
-        </Button>
+
+        <FollowButton
+          profileUserData={creator}
+          handleFollowChange={handleFollowChange}
+          className="h-[2.375rem] w-[110px]"
+        />
       </div>
     </div>
   );
