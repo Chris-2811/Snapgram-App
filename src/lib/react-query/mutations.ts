@@ -4,6 +4,8 @@ import {
   saveUserToDB,
   savePost,
   likePost,
+  followUser,
+  unfollowUser,
 } from "../firebase/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { INewUser, IPost } from "@/types";
@@ -99,6 +101,48 @@ export const useDeletePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+    },
+  });
+};
+
+export const useFollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      followedUserId,
+    }: {
+      userId: string;
+      followedUserId: string;
+    }) => followUser({ userId, followedUserId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
+};
+
+export const useUnfollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      followedUserId,
+    }: {
+      userId: string;
+      followedUserId: string;
+    }) => unfollowUser({ userId, followedUserId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
     },
   });
