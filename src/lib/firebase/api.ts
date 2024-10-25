@@ -23,9 +23,11 @@ import {
   deleteDoc,
   serverTimestamp,
   updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
-import { create } from "domain";
+import { error } from "console";
 
 // ====================
 // AUTH
@@ -78,6 +80,9 @@ export async function logInAccount(user: { email: string; password: string }) {
 }
 
 export async function getCurrentUser(docId: string) {
+  console.log("getCurrentUserGetsCalled");
+  console.log(docId);
+
   try {
     if (!docId) {
       throw new Error("No user found");
@@ -88,6 +93,8 @@ export async function getCurrentUser(docId: string) {
     if (!docSnapshot.exists()) {
       throw new Error("No user found");
     }
+
+    console.log("docSnapshot", docSnapshot.data());
 
     return docSnapshot.data() as IUser;
   } catch (error) {
@@ -526,7 +533,7 @@ export async function getAllReels({
 
     const querySnapshot = await getDocs(q);
 
-    if (!querySnapshot) throw new Error();
+    if (!querySnapshot) return [];
 
     const reels = querySnapshot.docs.map((doc) => ({
       ...doc.data(),
@@ -581,7 +588,10 @@ export async function getReelsById({
     throw new Error("Failed to fetch reels by id");
   }
 }
+
 export async function getReelsByUserIds(userIds: string[]) {
+  console.log("user Ids", userIds);
+  console.log("function gets called ");
 
   try {
     const colRef = collection(db, "reels");
@@ -617,6 +627,7 @@ export async function getReelsByUserIds(userIds: string[]) {
     return [];
   }
 }
+
 // ====================
 // FOLLOWERS
 // ====================
