@@ -3,6 +3,7 @@ import { AuthContext } from "@/context/AuthContext";
 import {
   useGetPostsById,
   useGetReelsById,
+  useGetCurrentUser,
   /* useGetReels, */
   /* useGetReelsById, */
   useGetUserById,
@@ -15,20 +16,25 @@ import Filter from "@/components/shared/_main/Filter";
 /* import Reel from "@/components/shared/_main/Reel";
  */
 import ReelList from "@/components/shared/_main/ReelList";
+import { useGetTotalPostCount } from "@/lib/react-query/queries";
+import FollowButton from "@/components/shared/_main/FollowButton";
 
 function Profile() {
   const [isActive, setActive] = useState("posts");
   const { id } = useParams();
-  const params = useParams();
   const { user } = useContext(AuthContext);
-  const { data: userData } = useGetUserById(id);
+  const { data: currentUser, isLoading: isLoadingCurrentUser } =
+    useGetCurrentUser(user.userId);
+  const { data: profileUserData, refetch: refetchProfileUserData } =
+    useGetUserById(id);
   const { data: posts, hasNextPage, fetchNextPage } = useGetPostsById(id);
   const { data: reels } = useGetReelsById(id);
+  const { data: totalPostCount } = useGetTotalPostCount(id!);
 
   /*   const { data: posts, fetchNextPage, hasNextPage } = useGetPostsById(id);
    */ /*   const { data: reels } = useGetReelsById(id); */
 
-  const isCurrentUser = id === user?.userId;
+  const isCurrentUser = id === currentUser?.userId;
 
   const allPosts = posts?.pages.flatMap((page) => page.map((post) => post));
 
@@ -36,7 +42,13 @@ function Profile() {
     ? reels?.pages.flatMap((page) => page.map((reel) => reel))
     : [];
 
-  console.log("reels", allReels);
+  console.log("currentUser", currentUser);
+  console.log("profileUserData", profileUserData);
+
+  const handleFollowChange = () => {
+    console.log("handleFollowChange", handleFollowChange);
+    refetchProfileUserData();
+  };
 
   return (
     <div className="flex-1 px-4 pt-8 sm:px-7 lg:px-[3.75rem] lg:pt-20">
@@ -44,8 +56,8 @@ function Profile() {
         <div className="flex items-start gap-4">
           <img
             src={
-              userData?.photoUrl
-                ? userData.photoUrl
+              profileUserData?.photoUrl
+                ? profileUserData.photoUrl
                 : "/assets/icons/profile-placeholder.svg"
             }
             alt="profile-picture"
@@ -54,16 +66,18 @@ function Profile() {
           <div className="flex flex-col gap-4 md:hidden lg:flex-row lg:items-baseline lg:gap-10">
             <div>
               <h1 className="lg:heading-lg heading-sm mb-1">
-                {userData?.name}
+                {profileUserData?.name}
               </h1>
-              {userData?.username && (
-                <div className="text-light-400">@{userData?.username}</div>
+              {profileUserData?.username && (
+                <div className="text-light-400">
+                  @{profileUserData?.username}
+                </div>
               )}
             </div>
             <div className="md:hidden">
               {isCurrentUser ? (
                 <Link
-                  to={`/edit-profile/${user?.userId}`}
+                  to={`/edit-profile/${currentUser?.userId}`}
                   className="flex items-center gap-2"
                 >
                   <img
@@ -75,9 +89,14 @@ function Profile() {
                 </Link>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Button className="h-[38px] w-[84px] bg-primary">
-                    Follow
-                  </Button>
+                  #
+                  {currentUser && profileUserData && (
+                    <FollowButton
+                      className="h-[38px] w-[84px]"
+                      profileUserData={profileUserData!}
+                      handleFollowChange={handleFollowChange}
+                    />
+                  )}
                   <Button className="h-[38px] w-[84px] bg-light-200 text-dark-200">
                     Message
                   </Button>
@@ -90,18 +109,18 @@ function Profile() {
           <div className="hidden flex-col gap-4 md:flex lg:flex-row lg:items-baseline lg:gap-10">
             <div>
               <h1 className="heading-sm lg:heading-lg mb-1">
-                {userData?.name}
+                {profileUserData?.name}
               </h1>
-              {userData?.username && (
+              {profileUserData?.username && (
                 <div className="text-light-400 lg:text-lg">
-                  @{userData?.username}
+                  @{profileUserData?.username}
                 </div>
               )}
             </div>
             <div className="hidden md:block">
               {isCurrentUser ? (
                 <Link
-                  to={`/edit-profile/${user?.userId}`}
+                  to={`/edit-profile/${currentUser?.userId}`}
                   className="flex items-center gap-2"
                 >
                   <img
@@ -113,9 +132,13 @@ function Profile() {
                 </Link>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Button className="h-[38px] w-[84px] bg-primary">
-                    Follow
-                  </Button>
+                  {currentUser && profileUserData && (
+                    <FollowButton
+                      className="h-[38px] w-[84px]"
+                      profileUserData={profileUserData!}
+                      handleFollowChange={handleFollowChange}
+                    />
+                  )}
                   <Button className="h-[38px] w-[84px] bg-light-200 text-dark-200">
                     Message
                   </Button>
@@ -126,27 +149,27 @@ function Profile() {
           <div className="flex items-center gap-4 md:mt-[1rem] md:gap-10 lg:mt-[1.375rem]">
             <div className={`${!isCurrentUser && "flex items-center gap-2"}`}>
               <div className="text-lg font-medium tracking-[-1px] text-primary md:text-xl">
-                273
+                {totalPostCount}
               </div>
               <p className="mt-0.5 text-lg font-medium">Posts</p>
             </div>
             <div className={`${!isCurrentUser && "flex items-center gap-2"}`}>
               <div className="text-lg font-medium tracking-[-1px] text-primary md:text-xl">
-                273
+                {profileUserData?.followers.length}
               </div>
               <p className="mt-0.5 text-lg font-medium">Followers</p>
             </div>
             <div className={`${!isCurrentUser && "flex items-center gap-2"}`}>
               <div className="text-lg font-medium tracking-[-1px] text-primary md:text-xl">
-                273
+                {profileUserData?.following.length}
               </div>
               <p className="mt-0.5 text-lg font-medium">Following</p>
             </div>
           </div>
 
-          {userData?.bio && (
+          {profileUserData?.bio && (
             <div className="mt-6 sm:max-w-xl md:text-balance 2xl:max-w-[628px]">
-              {userData?.bio}
+              {profileUserData?.bio}
             </div>
           )}
         </div>
