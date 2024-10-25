@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Reel from "@/components/shared/_main/Reel";
 import ReelList from "@/components/shared/_main/ReelList";
 import { useGetAllReels } from "@/lib/react-query/queries";
@@ -8,10 +8,23 @@ import Filter from "@/components/shared/_main/Filter";
 import TabbarReels from "@/components/Reels/TabbarReels";
 import HashtagBatch from "@/components/ui/hashtag-batch";
 import { Button } from "@/components/ui/button";
+import { AuthContext } from "@/context/AuthContext";
+import { useGetCurrentUser } from "@/lib/react-query/queries";
+import { useEffect } from "react";
+import { useGetReelsByUserIds } from "@/lib/react-query/queries";
 
 function Reels() {
   const [activeTab, setActiveTab] = useState("for-you");
   const { data: reels, hasNextPage, fetchNextPage } = useGetAllReels(9);
+  const { user } = useContext(AuthContext);
+  const { data: currentUser } = useGetCurrentUser(user.userId);
+
+  const followingIds = currentUser
+    ? currentUser.following.map((user) => user.userId)
+    : [];
+
+  const { data: followingReels, isLoading: isLoadingFollowingReels } =
+    useGetReelsByUserIds(followingIds);
 
   const flatReels = reels ? reels?.pages.flatMap((page) => page) : [];
 
@@ -50,7 +63,9 @@ function Reels() {
         </div>
         <div className="mt-6 md:mt-8 lg:mt-9">
           <div>
-            <ReelList reels={flatReels} />
+            <ReelList
+              reels={activeTab === "following" ? followingReels : flatReels}
+            />
             {hasNextPage && (
               <div className="flex justify-center">
                 <Button
