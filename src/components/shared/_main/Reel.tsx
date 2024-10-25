@@ -70,8 +70,10 @@ function Reel({ reel, className }: { reel: IReel; className?: string }) {
       <div className="absolute bottom-7 left-6 right-6 z-50 md:hidden">
         <div className="text-sm font-bold uppercase text-primary">
           <div className="flex gap-2">
-            {reel.tags.slice(0, 2).map((tag) => (
-              <div className="">#{tag}</div>
+            {reel.tags.slice(0, 2).map((tag, index) => (
+              <div key={index} className="">
+                #{tag}
+              </div>
             ))}
           </div>
         </div>
