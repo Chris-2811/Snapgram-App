@@ -5,13 +5,16 @@ import { useState } from "react";
 import { Button } from "./button";
 import { useGetUsers } from "@/lib/react-query/queries";
 import { useNavigate } from "react-router-dom";
+import FollowButton from "../shared/_main/FollowButton";
 
 export const HoverEffect = ({
   items,
   className,
+  handleFollowChange,
 }: {
   items: any;
   className?: string;
+  handleFollowChange: () => void;
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -23,8 +26,7 @@ export const HoverEffect = ({
       )}
     >
       {items?.map((item, idx) => (
-        <Link
-          to={`/profile/${item?.userId}`}
+        <div
           key={item?.userId}
           className="group relative block h-full w-full cursor-default p-2"
           onMouseEnter={() => setHoveredIndex(idx)}
@@ -49,13 +51,15 @@ export const HoverEffect = ({
           </AnimatePresence>
           <Card item={item}>
             <div className="grid h-[142px] grid-rows-[auto_1fr_auto] place-items-center">
-              <div className="cursor-pointer">
-                <img
-                  src={item.photoUrl}
-                  alt="avatar"
-                  className={`h-[54px] w-[54px] rounded-full object-cover`}
-                />
-              </div>
+              <Link to={`/profile/${item?.userId}`}>
+                <div className="cursor-pointer">
+                  <img
+                    src={item.photoUrl}
+                    alt="avatar"
+                    className={`h-[54px] w-[54px] rounded-full object-cover`}
+                  />
+                </div>
+              </Link>
               <div className="row-start-2 row-end-3 mt-[0.6125rem] self-start text-center leading-none">
                 <h3
                   className={`text-sm font-semibold leading-[1.4] text-white`}
@@ -70,12 +74,14 @@ export const HoverEffect = ({
                   </small>
                 )}
               </div>
-              <Button className="mt-3 block bg-primary" size="sm">
-                Follow
-              </Button>
+
+              <FollowButton
+                handleFollowChange={handleFollowChange}
+                profileUserData={item}
+              />
             </div>
           </Card>
-        </Link>
+        </div>
       ))}
     </div>
   );
