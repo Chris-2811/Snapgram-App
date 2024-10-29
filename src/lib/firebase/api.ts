@@ -627,6 +627,7 @@ export async function getReelsByUserIds(userIds: string[]) {
     return [];
   }
 }
+
 export async function likeReel(reelId: string, likesArray: string[]) {
   try {
     await updateDoc(doc(db, "reels", reelId), {
@@ -638,6 +639,7 @@ export async function likeReel(reelId: string, likesArray: string[]) {
     console.error("Error liking reel", error);
   }
 }
+
 export async function saveReel(userId: string, reelId: string) {
   try {
     await setDoc(doc(db, "savedReels", reelId), {
@@ -673,6 +675,27 @@ export async function deleteSavedReel(userId: string, reelId: string) {
     console.log("Reel deleted successfully");
   } catch (error) {
     console.error("Error deleting reel", error);
+  }
+}
+
+export async function isReelSavedByUser(userId: string, reelId: string) {
+  try {
+    const q = query(
+      collection(db, "savedReels"),
+      where("userId", "==", userId),
+      where("reelId", "==", reelId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error checking if post is saved", error);
+    return false;
   }
 }
 
