@@ -8,6 +8,7 @@ import {
   unfollowUser,
   likeReel,
   saveReel,
+  deleteSavedReel,
 } from "../firebase/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { INewUser, IPost } from "@/types";
@@ -126,6 +127,19 @@ export const useSaveReel = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_REELS_BY_ID],
+      });
+    },
+  });
+};
+
+export const useDeleteSavedReel = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, reelId }: { userId: string; reelId: string }) =>
+      deleteSavedReel(userId, reelId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_SAVED_REELS],
       });
     },
   });
