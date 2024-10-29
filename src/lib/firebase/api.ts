@@ -652,6 +652,31 @@ export async function saveReel(userId: string, reelId: string) {
   }
 }
 
+export async function deleteSavedReel(userId: string, reelId: string) {
+  try {
+    const q = query(
+      collection(db, "savedReels"),
+      where("userId", "==", userId),
+      where("reelId", "==", reelId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      throw new Error("No saved reel found");
+    }
+
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+
+    console.log("Reel deleted successfully");
+  } catch (error) {
+    console.error("Error deleting reel", error);
+  }
+}
+
+
 // ====================
 // FOLLOWERS
 // ====================
