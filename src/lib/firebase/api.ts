@@ -638,6 +638,19 @@ export async function likeReel(reelId: string, likesArray: string[]) {
     console.error("Error liking reel", error);
   }
 }
+export async function saveReel(userId: string, reelId: string) {
+  try {
+    await setDoc(doc(db, "savedReels", reelId), {
+      userId: userId,
+      reelId: reelId,
+      createdAt: serverTimestamp(),
+    });
+
+    console.log("Reel saved successfully");
+  } catch (error) {
+    console.error("Error saving reel", error);
+  }
+}
 
 // ====================
 // FOLLOWERS
