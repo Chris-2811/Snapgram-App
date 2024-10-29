@@ -1,14 +1,15 @@
 import Tabbar from "@/components/ui/Tabbar";
 import React, { useContext, useEffect, useState } from "react";
 import Filter from "@/components/shared/_main/Filter";
-import { useGetSavedPosts } from "@/lib/react-query/queries";
+import { useGetSavedPosts, useGetSavedReels } from "@/lib/react-query/queries";
 import { AuthContext } from "@/context/AuthContext";
 import PostList from "@/components/shared/_main/PostList";
-import { useGetPostsById } from "@/lib/react-query/queries";
+import { useGetPostsById, useGetReelsById } from "@/lib/react-query/queries";
 import { useInView } from "react-intersection-observer";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
+import ReelList from "@/components/shared/_main/ReelList";
 
 function SavedPosts() {
   const [isActive, setActive] = React.useState("posts");
@@ -21,8 +22,12 @@ function SavedPosts() {
     hasNextPage,
     fetchNextPage,
   } = useGetSavedPosts(user.userId);
+  const { data: savedReels, isLoading: isLoadingSavedReels } = useGetSavedReels(
+    user.userId,
+  );
 
   console.log(savedPosts);
+  console.log("saved", savedReels);
 
   const { inView, ref } = useInView();
 
@@ -35,6 +40,7 @@ function SavedPosts() {
   console.log(savedPosts?.pages);
 
   const allPosts = savedPosts ? savedPosts?.pages?.flatMap((page) => page) : [];
+  const allReels = savedReels ? savedReels?.pages?.flatMap((page) => page) : [];
 
   function handleLoadMore() {
     fetchNextPage();
@@ -58,7 +64,7 @@ function SavedPosts() {
               Saved Posts
             </h1>
           </div>
-          <div className="max-w-max">
+          <div className="">
             <div className="my-7 flex max-w-[1900px] flex-col justify-between gap-5 xs:flex-row md:mb-[3rem] md:mt-10 md:items-center">
               <Tabbar isActive={isActive} setActive={setActive} />
               <div>
@@ -66,8 +72,12 @@ function SavedPosts() {
               </div>
             </div>
 
-            <div>
-              <PostList posts={allPosts} setShowFeed={setShowFeed} />
+            <div className="">
+              {isActive === "posts" ? (
+                <PostList posts={allPosts} setShowFeed={setShowFeed} />
+              ) : (
+                <ReelList reels={allReels} />
+              )}
               {/* <div className="my-[3.75rem] flex justify-center">
                 <Button
                   onClick={handleLoadMore}
