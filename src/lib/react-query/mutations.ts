@@ -6,6 +6,7 @@ import {
   likePost,
   followUser,
   unfollowUser,
+  likeReel,
 } from "../firebase/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { INewUser, IPost } from "@/types";
@@ -89,6 +90,26 @@ export const useLikePost = () => {
 
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS_BY_IDS],
+      });
+    },
+  });
+};
+export const useLikeReel = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      reelId,
+      likesArray,
+    }: {
+      reelId: string;
+      likesArray: string[];
+    }) => likeReel(reelId, likesArray),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_REELS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_REELS_BY_ID],
       });
     },
   });
