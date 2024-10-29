@@ -775,6 +775,36 @@ export async function getReelsByReelIds(reelIds: string[]) {
   }
 }
 
+export async function getCommentsByReelId(reelId: string) {
+  console.log("reelId", reelId);
+  if (!reelId) throw Error;
+
+  try {
+    const q = query(
+      collection(db, "reelComments"),
+      where("reelId", "==", reelId),
+      orderBy("timestamp", "desc"),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    console.log("Documents length:", querySnapshot.docs.length);
+
+    if (!querySnapshot) throw new Error();
+
+    const comments = querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as IComment),
+    }));
+
+    console.log("Number of documents found:", querySnapshot.size);
+
+    console.log("commentsHere", comments);
+
+    return comments;
+  } catch (error) {
+    console.error("Error fetching comments", error);
+  }
+}
 
 // ====================
 // FOLLOWERS
