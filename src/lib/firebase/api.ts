@@ -699,6 +699,62 @@ export async function isReelSavedByUser(userId: string, reelId: string) {
   }
 }
 
+export async function getSavedReels({
+  userId,
+  pageParam,
+}: {
+  userId: string;
+  pageParam: string | null;
+}) {
+  console.log("userId", userId);
+  try {
+    let q;
+
+    console.log("pageParam", pageParam);
+
+    if (pageParam) {
+      const lastDocSnapshot = await getDoc(doc(db, "savedReels", pageParam));
+
+      q = query(
+        collection(db, "savedReels"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        startAfter(lastDocSnapshot),
+        limit(18),
+      );
+    } else {
+      q = query(
+        collection(db, "savedReels"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc"),
+        limit(18),
+      );
+    }
+
+    const querySnapshot = await getDocs(q);
+
+    console.log(querySnapshot);
+
+    console.log("querySnapshot", querySnapshot);
+
+    if (!querySnapshot) throw new Error();
+
+    console.log("querySnapshot", querySnapshot.docs);
+
+    const savedReels = querySnapshot.docs.map((doc) => doc.data().reelId);
+
+    console.log("savedReels", savedReels);
+
+    const allSavedReels = await getReelsByReelIds(savedReels);
+
+    console.log("allSavedReels", allSavedReels);
+
+    return allSavedReels;
+  } catch (error) {
+    console.error("Error fetching saved posts", error);
+    return [];
+  }
+}
 
 // ====================
 // FOLLOWERS
