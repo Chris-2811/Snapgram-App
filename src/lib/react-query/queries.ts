@@ -13,6 +13,7 @@ import {
   getTotalPostCount,
   getCurrentUser,
   getReelsByUserIds,
+  getSavedReels,
 } from "../firebase/api";
 
 export const useGetUserById = (userId: string | undefined) => {
@@ -187,5 +188,28 @@ export const useGetReelsByUserIds = (userIds: string[]) => {
     queryKey: [QUERY_KEYS.GET_REELS_BY_USER_IDS, userIds],
     queryFn: () => getReelsByUserIds(userIds),
     enabled: userIds.length > 0,
+  });
+};
+
+export const useGetSavedReels = (userId: string) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_REELS, userId],
+    queryFn: ({ pageParam = null }) => getSavedReels({ userId, pageParam }),
+    enabled: !!userId,
+    initialPageParam: null,
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage.length < 18) {
+        return undefined;
+      }
+
+      const lastId = lastPage[lastPage.length - 1]?.reelId;
+
+      if (!lastId) {
+        console.error("Last post ID not found");
+        return undefined;
+      }
+
+      return lastId;
+    },
   });
 };
