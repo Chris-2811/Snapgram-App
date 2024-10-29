@@ -756,6 +756,26 @@ export async function getSavedReels({
   }
 }
 
+export async function getReelsByReelIds(reelIds: string[]) {
+  try {
+    const colRef = collection(db, "reels");
+    const reels: IReel[] = [];
+
+    for (const reelId of reelIds) {
+      const reel = await getDoc(doc(colRef, reelId));
+      if (reel.exists()) {
+        reels.push(reel.data() as IReel);
+      }
+    }
+
+    return reels;
+  } catch (error) {
+    console.error("Error fetching reels by user ids", error);
+    return [];
+  }
+}
+
+
 // ====================
 // FOLLOWERS
 // ====================
