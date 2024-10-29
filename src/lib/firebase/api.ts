@@ -627,6 +627,17 @@ export async function getReelsByUserIds(userIds: string[]) {
     return [];
   }
 }
+export async function likeReel(reelId: string, likesArray: string[]) {
+  try {
+    await updateDoc(doc(db, "reels", reelId), {
+      likes: likesArray,
+    });
+
+    console.log("Reel liked successfully");
+  } catch (error) {
+    console.error("Error liking reel", error);
+  }
+}
 
 // ====================
 // FOLLOWERS
