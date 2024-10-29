@@ -14,6 +14,7 @@ import PostStats from "./PostStats";
 import { MAX_COMMENT_LENGTH } from "@/constants";
 import { Link } from "react-router-dom";
 import { useDeletePost } from "@/lib/react-query/mutations";
+import Comment from "@/components/shared/_main/Comment";
 
 interface PostDetailsProps {
   handleCloseModal: () => void;
@@ -221,52 +222,12 @@ function PostDetails({
               <div className="mt-[1.875rem] border-t border-t-dark-400 lg:pt-[1.75rem]">
                 <div className="scrollbar-custom h-[195px] space-y-[1.875rem] overflow-y-auto pr-2">
                   {recentComments?.map((item, index) => (
-                    <div className="flex gap-2">
-                      <div>
-                        <img
-                          src={
-                            userQueries[index].data?.photoUrl
-                              ? userQueries[index].data?.photoUrl
-                              : "/assets/images/profile.png"
-                          }
-                          alt="avatar"
-                          width={36}
-                          className="h-[36px] rounded-full"
-                        />
-                      </div>
-
-                      <div className="flex flex-1 items-start justify-between">
-                        <div className="flex flex-col">
-                          <div className="w-full max-w-[361px] break-words text-sm font-normal">
-                            <span className="mr-2 text-nowrap text-sm font-semibold text-light-300">
-                              {userQueries[index].data?.username
-                                ? userQueries[index].data?.username
-                                : userQueries[index].data?.name}
-                            </span>
-                            {item.text}
-                          </div>
-                          <div className="mt-0.5">
-                            <div className="flex items-center text-xs">
-                              <p className="mr-3 text-light-300">1d</p>
-                              <img
-                                src="/assets/icons/reply.svg"
-                                alt="reply-icon"
-                                className="mr-1"
-                              />
-                              <p>Reply</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <img
-                            src="/assets/icons/like.svg"
-                            alt="like-icon"
-                            className="w-4"
-                          />
-                          <p className="text-sm text-light-300">4 likes</p>
-                        </div>
-                      </div>
-                    </div>
+                    <Comment
+                      key={index}
+                      item={item}
+                      index={index}
+                      userQueries={userQueries}
+                    />
                   ))}
                 </div>
               </div>
