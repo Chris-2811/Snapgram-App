@@ -6,8 +6,19 @@ import { FaPlay } from "react-icons/fa";
 import PostStats from "./PostStats";
 import { Input } from "@/components/ui/input";
 import ReelStats from "./ReelStats";
-import { useGetUserById } from "@/lib/react-query/queries";
+import {
+  useGetUserById,
+  useGetCommentsByReelId,
+} from "@/lib/react-query/queries";
 import { Link } from "react-router-dom";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase/firebase";
+import { useQueries } from "@tanstack/react-query";
+import { getUserById } from "@/lib/firebase/api";
+import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
+import Comment from "@/components/shared/_main/Comment";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 function ReelDetails({
   handleCloseReelDetails,
@@ -23,6 +34,19 @@ function ReelDetails({
     React.useState<boolean>(false);
 
   const { data: user } = useGetUserById(currentReel.userId);
+  const { data: comments, refetch: refetchComments } = useGetCommentsByReelId(
+    currentReel.reelId,
+  );
+
+  const { user: currentUser } = useContext(AuthContext);
+
+  const userQueries = useQueries({
+    queries:
+      comments?.map((comment) => ({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, comment.userId],
+        queryFn: () => getUserById(comment.userId),
+      })) || [],
+  });
 
   function handleTextChange(e: React.ChangeEvent<HTMLInputElement>) {
     setText(e.target.value);
@@ -32,6 +56,37 @@ function ReelDetails({
       setIsCommentTooLong(false);
     }
   }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (text.length > 150) {
+      setIsCommentTooLong(true);
+      return;
+    }
+
+    if (text.length === 0) {
+      return;
+    }
+
+    const colRef = collection(db, "reelComments");
+
+    try {
+      await addDoc(colRef, {
+        reelId: currentReel.reelId,
+        userId: currentUser?.userId,
+        text: text,
+        timestamp: serverTimestamp(),
+      });
+
+      setText("");
+      refetchComments();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log(currentReel.reelId);
+  console.log("comments", comments);
 
   return (
     <>
@@ -44,7 +99,7 @@ function ReelDetails({
           <div className="relative aspect-[17/30] w-[550px]">
             <Reel reel={currentReel} className="z-[10] rounded-none" />
           </div>
-          <div className="flex w-[440px] flex-col px-4 py-5">
+          <div className="flex w-[480px] flex-col px-4 py-5">
             <div className="flex-1">
               <div className="flex items-center gap-3">
                 <Link to={`/profile/${user?.userId}`}>
@@ -79,25 +134,39 @@ function ReelDetails({
                   ))}
                 </ul>
               </div>
+              <div className="space-y-6 pt-7">
+                <div className="scrollbar-custom h-[640px] space-y-[1.875rem] overflow-y-auto pr-2">
+                  {comments?.map((comment, index) => (
+                    <Comment
+                      key={comment.commentId}
+                      item={comment}
+                      index={index}
+                      userQueries={userQueries}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="space-y-[1.875rem]">
-              <ReelStats />
-              <div className="form-control relative w-full">
-                <Input
-                  className="mt-0 h-11 bg-dark-400 pr-14 ring-0 placeholder:text-light-400 focus:ring-0"
-                  placeholder="Write your comment..."
-                  onChange={handleTextChange}
-                  value={text}
-                />
-                <button className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <img src="/assets/icons/plain.svg" alt="" className="" />
-                </button>
-                {isCommentTooLong && (
-                  <small className="absolute -bottom-6 right-1 text-red">
-                    Maximum 150 characters
-                  </small>
-                )}
-              </div>
+              <ReelStats reel={currentReel} />
+              <form onSubmit={handleSubmit}>
+                <div className="form-control relative w-full">
+                  <Input
+                    className="mt-0 h-11 bg-dark-400 pr-14 ring-0 placeholder:text-light-400 focus:ring-0"
+                    placeholder="Write your comment..."
+                    onChange={handleTextChange}
+                    value={text}
+                  />
+                  <button className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <img src="/assets/icons/plain.svg" alt="" className="" />
+                  </button>
+                  {isCommentTooLong && (
+                    <small className="absolute -bottom-6 right-1 text-red">
+                      Maximum 150 characters
+                    </small>
+                  )}
+                </div>
+              </form>
             </div>
           </div>
         </div>
