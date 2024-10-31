@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
+import { useGetCommentsByReelId } from "@/lib/react-query/queries";
 
 function ReelPreview({ reel, className }: { reel: any; className?: string }) {
-  const { user } = useContext(AuthContext);
+  const { data: comments } = useGetCommentsByReelId(reel.reelId);
 
   return (
     <div
@@ -29,11 +30,11 @@ function ReelPreview({ reel, className }: { reel: any; className?: string }) {
         <div className="hidden items-center gap-6 group-hover:flex">
           <div className="flex gap-1">
             <img src="/assets/icons/liked.svg" alt="like-icon" />
-            <p>7.135</p>
+            <p>{reel.likes.length}</p>
           </div>
           <div className="flex gap-1">
             <img src="/assets/icons/chat.svg" alt="chat-icon" />
-            <p>134</p>
+            <p>{comments?.length}</p>
           </div>
         </div>
       </div>
